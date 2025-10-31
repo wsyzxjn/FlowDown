@@ -11152,18 +11152,12 @@
         }
       }
     },
-    "This value will be added to the request body as additional fields. Accepts JSON." : {
+    "This value will be added to the request body as additional fields." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This value will be added to the request body as additional fields. Accepts JSON."
-          }
-        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此处的数据将会在请求额外添加到请求报文中，并覆盖已有的任何同名字段。使用 JSON。"
+            "value" : "此处的数据将会在请求额外添加到请求报文中，并覆盖已有的任何同名字段。"
           }
         }
       }

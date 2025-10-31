@@ -252,7 +252,7 @@ class CloudModelEditorController: StackScrollController {
         }
         bodyFieldsEditorView.configure(icon: .init(systemName: "pencil"))
         bodyFieldsEditorView.configure(title: "Additional Body Fields (Optional)")
-        bodyFieldsEditorView.configure(description: "This value will be added to the request body as additional fields. Accepts JSON.")
+        bodyFieldsEditorView.configure(description: "This value will be added to the request body as additional fields.")
         let hasBodyFields = !(model?.bodyFields.isEmpty ?? true) && !Self.isEmptyJsonObject(model?.bodyFields ?? "")
         bodyFieldsEditorView.configure(value: hasBodyFields ? String(localized: "Configured") : String(localized: "N/A"))
 
