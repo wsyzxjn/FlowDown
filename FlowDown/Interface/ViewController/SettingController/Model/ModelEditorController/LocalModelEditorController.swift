@@ -298,12 +298,9 @@ class LocalModelEditorController: StackScrollController {
         ) { $0.bottom /= 2 }
         stackView.addArrangedSubview(SeparatorView())
 
-        var verifyButtonReader: UIView?
         let verifyButton = ConfigurableActionView { @MainActor [weak self] _ in
             guard let self else { return }
             guard let model = ModelManager.shared.localModel(identifier: identifier) else { return }
-            verifyButtonReader?.isUserInteractionEnabled = false
-            verifyButtonReader?.alpha = 0.5
             Indicator.progress(
                 title: "Verifying Model",
                 controller: self
@@ -315,8 +312,6 @@ class LocalModelEditorController: StackScrollController {
                 }
                 try result.get()
                 await completionHandler {
-                    verifyButtonReader?.isUserInteractionEnabled = true
-                    verifyButtonReader?.alpha = 1
                     Indicator.present(
                         title: "Model Verified",
                         referencingView: self.view
@@ -328,7 +323,6 @@ class LocalModelEditorController: StackScrollController {
         verifyButton.configure(title: "Verify Model")
         verifyButton.configure(description: "Verify this model with corresponding capabilities.")
         stackView.addArrangedSubviewWithMargin(verifyButton)
-        verifyButtonReader = verifyButton.superview
         stackView.addArrangedSubview(SeparatorView())
         stackView.addArrangedSubviewWithMargin(
             ConfigurableSectionFooterView()

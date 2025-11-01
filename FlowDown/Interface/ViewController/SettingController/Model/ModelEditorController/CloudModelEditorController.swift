@@ -433,12 +433,9 @@ class CloudModelEditorController: StackScrollController {
         ) { $0.bottom /= 2 }
         stackView.addArrangedSubview(SeparatorView())
 
-        var verifyButtonReader: UIView?
         let verifyButton = ConfigurableActionView { @MainActor [weak self] _ in
             guard let self else { return }
             guard let model = ModelManager.shared.cloudModel(identifier: identifier) else { return }
-            verifyButtonReader?.isUserInteractionEnabled = false
-            verifyButtonReader?.alpha = 0.5
             Indicator.progress(
                 title: "Verifying Model",
                 controller: self
@@ -450,8 +447,6 @@ class CloudModelEditorController: StackScrollController {
                 }
                 try result.get()
                 await completionHandler {
-                    verifyButtonReader?.isUserInteractionEnabled = true
-                    verifyButtonReader?.alpha = 1
                     Indicator.present(
                         title: "Model Verified",
                         referencingView: self.view
@@ -463,7 +458,6 @@ class CloudModelEditorController: StackScrollController {
         verifyButton.configure(title: "Verify Model")
         verifyButton.configure(description: "Verify the model by sending a test request.")
         stackView.addArrangedSubviewWithMargin(verifyButton)
-        verifyButtonReader = verifyButton.superview
         stackView.addArrangedSubview(SeparatorView())
 
         stackView.addArrangedSubviewWithMargin(
