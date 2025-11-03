@@ -1,5 +1,5 @@
 //
-//  ConversationListView.swift
+//  ConversationSelectionView.swift
 //  FlowDown
 //
 //  Created by 秋星桥 on 2/3/25.
@@ -15,7 +15,7 @@ private class GroundedTableView: UITableView {
     @objc var allowsFooterViewsToFloat: Bool { false }
 }
 
-class ConversationListView: UIView {
+class ConversationSelectionView: UIView {
     let tableView: UITableView
     let dataSource: DataSource
 
@@ -62,6 +62,8 @@ class ConversationListView: UIView {
         tableView.sectionHeaderTopPadding = 0
         tableView.sectionHeaderHeight = UITableView.automaticDimension
 
+        updateDataSource()
+
         Publishers.CombineLatest(
             ConversationManager.shared.conversations,
             ChatSelection.shared.selection
@@ -71,7 +73,7 @@ class ConversationListView: UIView {
         .sink { [weak self] _, identifier in
             guard let self else { return }
             updateDataSource()
-            Logger.ui.debugFile("ConversationListView received global selection: \(identifier ?? "nil")")
+            Logger.ui.debugFile("ConversationSelectionView received global selection: \(identifier ?? "nil")")
             let selectedIndexPath = Set(tableView.indexPathsForSelectedRows ?? [])
             for index in selectedIndexPath {
                 tableView.deselectRow(at: index, animated: false)

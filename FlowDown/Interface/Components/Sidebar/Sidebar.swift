@@ -14,7 +14,7 @@ class Sidebar: UIView {
     let newChatButton = NewChatButton()
     let searchButton = SearchControllerOpenButton()
     let settingButton = SettingButton()
-    let conversationListView = ConversationListView()
+    let conversationSelectionView = ConversationSelectionView()
     let syncIndicator = SidebarSyncLabel()
 
     private var cancellables = Set<AnyCancellable>()
@@ -53,8 +53,8 @@ class Sidebar: UIView {
 
         searchButton.delegate = self
 
-        addSubview(conversationListView)
-        conversationListView.snp.makeConstraints { make in
+        addSubview(conversationSelectionView)
+        conversationSelectionView.snp.makeConstraints { make in
             make.top.equalTo(brandingLabel.snp.bottom).offset(spacing)
             make.bottom.equalTo(settingButton.snp.top).offset(-spacing)
             make.left.right.equalToSuperview()

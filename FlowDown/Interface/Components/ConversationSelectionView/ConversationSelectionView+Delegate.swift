@@ -1,5 +1,5 @@
 //
-//  ConversationListView+Delegate.swift
+//  ConversationSelectionView+Delegate.swift
 //  FlowDown
 //
 //  Created by 秋星桥 on 2/5/25.
@@ -8,10 +8,10 @@
 import Storage
 import UIKit
 
-extension ConversationListView: UITableViewDelegate {
+extension ConversationSelectionView: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let identifier = dataSource.itemIdentifier(for: indexPath) else { return }
-        Logger.ui.debugFile("ConversationListView didSelectRowAt: \(identifier)")
+        Logger.ui.debugFile("ConversationSelectionView didSelectRowAt: \(identifier)")
         ChatSelection.shared.select(identifier)
     }
 

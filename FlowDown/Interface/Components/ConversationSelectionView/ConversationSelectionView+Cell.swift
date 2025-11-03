@@ -1,5 +1,5 @@
 //
-//  ConversationListView+Cell.swift
+//  ConversationSelectionView+Cell.swift
 //  FlowDown
 //
 //  Created by 秋星桥 on 2/5/25.
@@ -9,7 +9,7 @@ import AlertController
 import Storage
 import UIKit
 
-extension ConversationListView {
+extension ConversationSelectionView {
     class Cell: UITableViewCell, UIContextMenuInteractionDelegate {
         let stack = UIStackView().with {
             $0.axis = .horizontal

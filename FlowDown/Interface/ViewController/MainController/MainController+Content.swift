@@ -54,7 +54,7 @@ extension MainController {
         sidebar.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        sidebar.conversationListView.tableView.gestureRecognizers?.forEach {
+        sidebar.conversationSelectionView.tableView.gestureRecognizers?.forEach {
             guard $0 is UIPanGestureRecognizer else { return }
             $0.cancelsTouchesInView = false
         }

@@ -66,7 +66,7 @@ final class WebSearchStateView: MessageListRowView {
             height: contentView.bounds.height
         )
 
-        menuButton.frame = contentView.bounds
+        menuButton.frame = searchIndicatorView.frame
     }
 
     @available(*, unavailable)
