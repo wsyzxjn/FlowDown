@@ -29,6 +29,7 @@ enum ShortcutsEntities {
         let id: ModelManager.ModelIdentifier
         let displayName: String
         let source: Source
+        let searchKeywords: [String]
 
         var displayRepresentation: DisplayRepresentation {
             DisplayRepresentation(
@@ -37,10 +38,24 @@ enum ShortcutsEntities {
             )
         }
 
-        init(id: ModelManager.ModelIdentifier, displayName: String, source: Source) {
+        init(
+            id: ModelManager.ModelIdentifier,
+            displayName: String,
+            source: Source,
+            searchKeywords: [String] = []
+        ) {
             self.id = id
             self.displayName = displayName
             self.source = source
+            self.searchKeywords = searchKeywords
+        }
+
+        func matches(_ term: String) -> Bool {
+            let lowercasedTerm = term.lowercased()
+            if displayName.lowercased().contains(lowercasedTerm) { return true }
+            if id.lowercased().contains(lowercasedTerm) { return true }
+            if searchKeywords.contains(where: { $0.contains(lowercasedTerm) }) { return true }
+            return false
         }
     }
 
@@ -60,9 +75,8 @@ enum ShortcutsEntities {
             let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !trimmed.isEmpty else { return try await allEntities() }
 
-            let lowercased = trimmed.lowercased()
             return await loadEntities().filter { entity in
-                entity.displayName.lowercased().contains(lowercased) || entity.id.lowercased().contains(lowercased)
+                entity.matches(trimmed)
             }
         }
 
@@ -75,17 +89,50 @@ enum ShortcutsEntities {
                 let manager = ModelManager.shared
                 var entities: [ModelManager.ModelIdentifier: ModelEntity] = [:]
 
+                func normalizedKeywords(_ keywords: [String]) -> [String] {
+                    keywords
+                        .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
+                        .filter { !$0.isEmpty }
+                }
+
                 for model in manager.localModels.value {
-                    let identifier = model.model_identifier
+                    let identifier = model.id
+                    guard !identifier.isEmpty else { continue }
                     let name = manager.modelName(identifier: identifier)
-                    entities[identifier] = ModelEntity(id: identifier, displayName: name, source: .local)
+                    let keywords = normalizedKeywords([
+                        model.model_identifier,
+                        identifier,
+                        name,
+                    ])
+                    entities[identifier] = ModelEntity(
+                        id: identifier,
+                        displayName: name,
+                        source: .local,
+                        searchKeywords: keywords
+                    )
                 }
 
                 for model in manager.cloudModels.value {
-                    let identifier = model.model_identifier
+                    let identifier = model.id
+                    guard !identifier.isEmpty else { continue }
                     if entities[identifier] != nil { continue }
                     let name = manager.modelName(identifier: identifier)
-                    entities[identifier] = ModelEntity(id: identifier, displayName: name, source: .cloud)
+                    var keywords = [
+                        model.model_identifier,
+                        identifier,
+                        name,
+                        model.endpoint,
+                    ]
+                    if !model.name.isEmpty {
+                        keywords.append(model.name)
+                    }
+                    let normalized = normalizedKeywords(keywords)
+                    entities[identifier] = ModelEntity(
+                        id: identifier,
+                        displayName: name,
+                        source: .cloud,
+                        searchKeywords: normalized
+                    )
                 }
 
                 if #available(iOS 26.0, macCatalyst 26.0, *), AppleIntelligenceModel.shared.isAvailable {
@@ -93,7 +140,11 @@ enum ShortcutsEntities {
                     entities[identifier] = ModelEntity(
                         id: identifier,
                         displayName: AppleIntelligenceModel.shared.modelDisplayName,
-                        source: .apple
+                        source: .apple,
+                        searchKeywords: normalizedKeywords([
+                            AppleIntelligenceModel.shared.modelDisplayName,
+                            identifier,
+                        ])
                     )
                 }
 

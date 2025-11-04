@@ -86,11 +86,11 @@ struct GenerateChatResponseIntent: AppIntent {
                 return defaultConversationModel
             }
 
-            if let firstCloud = manager.cloudModels.value.first?.model_identifier {
+            if let firstCloud = manager.cloudModels.value.first(where: { !$0.id.isEmpty })?.id {
                 return firstCloud
             }
 
-            if let firstLocal = manager.localModels.value.first?.model_identifier {
+            if let firstLocal = manager.localModels.value.first(where: { !$0.id.isEmpty })?.id {
                 return firstLocal
             }
 

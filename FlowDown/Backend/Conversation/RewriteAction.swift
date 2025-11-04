@@ -99,7 +99,6 @@ extension RewriteAction {
             title: "Rewriting Message",
             controller: controller
         ) { completionHandler in
-            let bodyFields = ModelManager.shared.modelBodyFields(for: model)
             let stream = try await ModelManager.shared.streamingInfer(
                 with: model,
                 input: messageBody
