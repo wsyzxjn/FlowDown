@@ -71,15 +71,67 @@ extension ConversationManager {
             ]
         )
 
-        let savePictureMenu = UIMenu(
-            options: [.displayInline],
+        let exportDocumentMenu = UIMenu(
+            title: String(localized: "Export Document"),
+            image: UIImage(systemName: "doc"),
             children: [
                 UIAction(
-                    title: String(localized: "Save Image"),
+                    title: String(localized: "Export Plain Text"),
+                    image: UIImage(systemName: "doc.plaintext")
+                ) { _ in
+                    ConversationManager.shared.exportConversation(identifier: conv.id, exportFormat: .plainText) { result in
+                        switch result {
+                        case let .success(content):
+                            DisposableExporter(
+                                data: Data(content.utf8),
+                                name: "Exported-\(Int(Date().timeIntervalSince1970))",
+                                pathExtension: "txt",
+                                title: "Export Plain Text"
+                            ).run(anchor: view, mode: .file)
+                        case .failure:
+                            Indicator.present(
+                                title: "Export Failed",
+                                preset: .error,
+                                referencingView: view
+                            )
+                        }
+                    }
+                },
+                UIAction(
+                    title: String(localized: "Export Markdown"),
+                    image: UIImage(systemName: "doc.richtext")
+                ) { _ in
+                    ConversationManager.shared.exportConversation(identifier: conv.id, exportFormat: .markdown) { result in
+                        switch result {
+                        case let .success(content):
+                            DisposableExporter(
+                                data: Data(content.utf8),
+                                name: "Exported-\(Int(Date().timeIntervalSince1970))",
+                                pathExtension: "md",
+                                title: "Export Markdown"
+                            ).run(anchor: view, mode: .file)
+                        case .failure:
+                            Indicator.present(
+                                title: "Export Failed",
+                                preset: .error,
+                                referencingView: view
+                            )
+                        }
+                    }
+                },
+            ]
+        )
+
+        let saveImageMenu = UIMenu(
+            title: String(localized: "Save Image"),
+            image: UIImage(systemName: "text.below.photo"),
+            options: [.displayInline],
+            children: ConversationCaptureView.LayoutPreset.allCases.map { preset in
+                UIAction(
+                    title: preset.displayName,
                     image: UIImage(systemName: "text.below.photo")
                 ) { _ in
-                    let captureView = ConversationCaptureView(session: session)
-                    guard let controller = view.parentViewController else { return }
+                    let captureView = ConversationCaptureView(session: session, preset: preset)
                     Indicator.progress(
                         title: "Rendering Content",
                         controller: controller
@@ -95,63 +147,21 @@ extension ConversationManager {
                         guard let image, let png = image.pngData() else { throw NSError() }
                         let exporter = DisposableExporter(
                             data: png,
-                            name: "Exported-\(Int(Date().timeIntervalSince1970))".sanitizedFileName,
+                            name: "Exported-\(Int(Date().timeIntervalSince1970))-\(Int(preset.rawValue))".sanitizedFileName,
                             pathExtension: "png",
                             title: "Export Image"
                         )
                         await completion { exporter.run(anchor: view) }
                     }
-                },
-                UIMenu(
-                    title: String(localized: "Export Document"),
-                    image: UIImage(systemName: "doc"),
-                    children: [
-                        UIAction(
-                            title: String(localized: "Export Plain Text"),
-                            image: UIImage(systemName: "doc.plaintext")
-                        ) { _ in
-                            ConversationManager.shared.exportConversation(identifier: conv.id, exportFormat: .plainText) { result in
-                                switch result {
-                                case let .success(content):
-                                    DisposableExporter(
-                                        data: Data(content.utf8),
-                                        name: "Exported-\(Int(Date().timeIntervalSince1970))",
-                                        pathExtension: "txt",
-                                        title: "Export Plain Text"
-                                    ).run(anchor: view, mode: .file)
-                                case .failure:
-                                    Indicator.present(
-                                        title: "Export Failed",
-                                        preset: .error,
-                                        referencingView: view
-                                    )
-                                }
-                            }
-                        },
-                        UIAction(
-                            title: String(localized: "Export Markdown"),
-                            image: UIImage(systemName: "doc.richtext")
-                        ) { _ in
-                            ConversationManager.shared.exportConversation(identifier: conv.id, exportFormat: .markdown) { result in
-                                switch result {
-                                case let .success(content):
-                                    DisposableExporter(
-                                        data: Data(content.utf8),
-                                        name: "Exported-\(Int(Date().timeIntervalSince1970))",
-                                        pathExtension: "md",
-                                        title: "Export Markdown"
-                                    ).run(anchor: view, mode: .file)
-                                case .failure:
-                                    Indicator.present(
-                                        title: "Export Failed",
-                                        preset: .error,
-                                        referencingView: view
-                                    )
-                                }
-                            }
-                        },
-                    ]
-                ),
+                }
+            }
+        )
+
+        let savePictureMenu = UIMenu(
+            options: [.displayInline],
+            children: [
+                saveImageMenu,
+                exportDocumentMenu,
             ]
         )
 
