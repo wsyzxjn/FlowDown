@@ -5,7 +5,6 @@ import UIKit
 
 enum ShortcutUtilitiesError: LocalizedError {
     case unableToCreateURL
-    case failedToLaunchApplication
     case invalidMessageEncoding
     case conversationNotFound
     case conversationHasNoMessages
@@ -16,8 +15,6 @@ enum ShortcutUtilitiesError: LocalizedError {
         switch self {
         case .unableToCreateURL:
             String(localized: "Unable to construct FlowDown URL.")
-        case .failedToLaunchApplication:
-            String(localized: "Failed to launch FlowDown.")
         case .invalidMessageEncoding:
             String(localized: "Unable to encode the provided message.")
         case .conversationNotFound:
@@ -33,40 +30,6 @@ enum ShortcutUtilitiesError: LocalizedError {
 }
 
 enum ShortcutUtilities {
-    private static let flowDownScheme = "flowdown"
-    private static let newConversationHost = "new"
-
-    static func launchFlowDownForNewConversation(message: String?) async throws -> String {
-        let trimmedMessage = message?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-        let urlString: String
-        if trimmedMessage.isEmpty {
-            urlString = "\(flowDownScheme)://\(newConversationHost)"
-        } else {
-            guard let encoded = trimmedMessage.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
-                throw ShortcutUtilitiesError.invalidMessageEncoding
-            }
-            urlString = "\(flowDownScheme)://\(newConversationHost)/\(encoded)"
-        }
-
-        guard let url = URL(string: urlString) else {
-            throw ShortcutUtilitiesError.unableToCreateURL
-        }
-
-        let launched = await withCheckedContinuation { cont in
-            Task { @MainActor in
-                let launched = await UIApplication.shared.open(url)
-                cont.resume(returning: launched)
-            }
-        }
-
-        if launched {
-            return String(localized: "FlowDown launched with your message.")
-        } else {
-            throw ShortcutUtilitiesError.failedToLaunchApplication
-        }
-    }
-
     static func latestConversationTranscript() throws -> String {
         guard let latestConversation = sdb.conversationList().first else {
             throw ShortcutUtilitiesError.conversationNotFound

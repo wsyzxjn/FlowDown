@@ -145,7 +145,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "%1$lld servers imported successfully, %2$lld failed."
           }
         }
@@ -155,7 +155,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "%1$lld templates imported successfully, %2$lld failed."
           }
         }
@@ -2662,38 +2662,6 @@
         }
       }
     },
-    "Create conversation" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create conversation"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "创建对话"
-          }
-        }
-      }
-    },
-    "Create Conversation" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create Conversation"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "创建对话"
-          }
-        }
-      }
-    },
     "Create Copy" : {
       "localizations" : {
         "en" : {
@@ -3546,7 +3514,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "Disabled built-in tools: %1$lld. Skipped: %2$lld. MCP servers disabled: %3$lld of %4$lld."
           }
         }
@@ -4440,7 +4408,7 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "Enabled built-in tools: %1$lld. Skipped: %2$lld. MCP servers enabled: %3$lld of %4$lld."
           }
         }
@@ -5089,6 +5057,12 @@
     },
     "Extra headers and body fields can be used to fine-tune model behavior and performance, such as enabling reasoning or setting reasoning budgets. The specific parameters vary across different service providers—please refer to their official documentation." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra headers and body fields can be used to fine-tune model behavior and performance, such as enabling reasoning or setting reasoning budgets. The specific parameters vary across different service providers—please refer to their official documentation."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5350,22 +5324,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法导入模版：%@"
-          }
-        }
-      }
-    },
-    "Failed to launch FlowDown." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to launch FlowDown."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法启动 FlowDown。"
           }
         }
       }
@@ -5704,38 +5662,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "FlowDown"
-          }
-        }
-      }
-    },
-    "FlowDown launched to start a new conversation." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FlowDown launched to start a new conversation."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已启动 FlowDown 以开始新对话。"
-          }
-        }
-      }
-    },
-    "FlowDown launched with your message." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FlowDown launched with your message."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已启动 FlowDown 并发送您的消息。"
           }
         }
       }
@@ -6720,22 +6646,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "继承"
-          }
-        }
-      }
-    },
-    "Initial Message" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Initial Message"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "初始消息"
           }
         }
       }
@@ -8771,22 +8681,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开文档"
-          }
-        }
-      }
-    },
-    "Open FlowDown and optionally start a conversation with a message." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open FlowDown and optionally start a conversation with a message."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开 FlowDown，可选择使用消息开始对话。"
           }
         }
       }
@@ -14298,13 +14192,12 @@
         }
       }
     },
-    "We require LAN access to interact with local service providers. We do not collect any information from your LAN." : {
-      "extractionState" : "stale",
+    "We requires LAN access for interact with local service providers. We do not collect any information from your LAN." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "We require LAN access to interact with local service providers. We do not collect any information from your LAN."
+            "value" : "We requires LAN access for interact with local service providers. We do not collect any information from your LAN."
           }
         },
         "zh-Hans" : {
@@ -14314,9 +14207,6 @@
           }
         }
       }
-    },
-    "We requires LAN access for interact with local service providers. We do not collect any information from your LAN." : {
-
     },
     "We strongly recommend that you do not enable this feature unless you are sure what you are doing. It may cause unexpected behavior and even data loss." : {
       "localizations" : {
@@ -14351,15 +14241,11 @@
       }
     },
     "We use your audio data for speech recognition. Your data is processed by system, we do not collect those infomation." : {
-
-    },
-    "We use your audio data for speech recognition. Your data is processed by the system; we do not collect this information." : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "We use your audio data for speech recognition. Your data is processed by the system; we do not collect this information."
+            "value" : "We use your audio data for speech recognition. Your data is processed by system, we do not collect those infomation."
           }
         },
         "zh-Hans" : {
@@ -14371,15 +14257,11 @@
       }
     },
     "We use your camera to take picture. Your photo may be uploaded by your choice." : {
-
-    },
-    "We use your camera to take pictures. Your photo may be uploaded based on your choice." : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "We use your camera to take pictures. Your photo may be uploaded based on your choice."
+            "value" : "We use your camera to take picture. Your photo may be uploaded by your choice."
           }
         },
         "zh-Hans" : {
@@ -14594,22 +14476,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你想要问什么？"
-          }
-        }
-      }
-    },
-    "What message should FlowDown use to start the chat?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What message should FlowDown use to start the chat?"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "FlowDown 应该使用什么消息来开始对话？"
           }
         }
       }
