@@ -73,15 +73,20 @@ open class RemoteChatClient: ChatService {
         _ content: [String],
         _ reasoningContent: [String],
         _ isInsideReasoningContent: inout Bool,
+        _ contentBuffer: inout String,
         _ response: inout ChatCompletionChunk
     ) {
         // now we can decode <think> and </think> tag for that purpose
         // transfer all content to buffer, and begin our process
-        let bufferContent = content.joined() // 将内容数组合并为单个字符串
+        let previousBuffer = contentBuffer
+        var hasProcessedReasoningToken = isInsideReasoningContent
+        let bufferContent = contentBuffer + content.joined() // 将缓冲区内容和新内容合并
         assert(reasoningContent.isEmpty)
+        contentBuffer = "" // 清空缓冲区
 
         if !isInsideReasoningContent {
             if let range = bufferContent.range(of: REASONING_START_TOKEN) {
+                hasProcessedReasoningToken = true
                 let beforeReasoning = String(bufferContent[..<range.lowerBound])
                     .trimmingCharactersFromEnd(in: .whitespacesAndNewlines)
                 let afterReasoningBegin = String(bufferContent[range.upperBound...])
@@ -95,35 +100,43 @@ open class RemoteChatClient: ChatService {
                     let remainingText = String(afterReasoningBegin[endRange.upperBound...])
                         .trimmingCharactersFromStart(in: .whitespacesAndNewlines)
 
-                    // 更新响应数据
-                    var delta = [ChatCompletionChunk.Choice.Delta]()
+                    // 只发送一个delta，避免多delta丢失问题
                     if !beforeReasoning.isEmpty {
-                        delta.append(.init(content: beforeReasoning))
+                        response = .init(choices: [.init(delta: .init(content: beforeReasoning))])
+                        // 将reasoning和remaining放回buffer，下次处理
+                        if !reasoningText.isEmpty || !remainingText.isEmpty {
+                            contentBuffer = "<think>\(reasoningText)</think>\(remainingText)"
+                        }
+                    } else if !reasoningText.isEmpty {
+                        response = .init(choices: [.init(delta: .init(reasoningContent: reasoningText))])
+                        // 将remaining放到buffer
+                        if !remainingText.isEmpty {
+                            contentBuffer = remainingText
+                        }
+                    } else if !remainingText.isEmpty {
+                        response = .init(choices: [.init(delta: .init(content: remainingText))])
+                    } else {
+                        response = .init(choices: [])
                     }
-                    if !reasoningText.isEmpty {
-                        delta.append(.init(reasoningContent: reasoningText))
-                    }
-                    if !remainingText.isEmpty {
-                        delta.append(.init(content: remainingText))
-                    }
-                    response = .init(choices: delta.map { .init(delta: $0) })
                 } else {
                     // 有开始标记但没有结束标记 - 进入推理内容
                     isInsideReasoningContent = true
-                    var delta = [ChatCompletionChunk.Choice.Delta]()
                     if !beforeReasoning.isEmpty {
-                        delta.append(.init(content: beforeReasoning))
+                        response = .init(choices: [.init(delta: .init(content: beforeReasoning))])
+                        // 将reasoning内容放回buffer
+                        if !afterReasoningBegin.isEmpty {
+                            contentBuffer = afterReasoningBegin
+                        }
+                    } else if !afterReasoningBegin.isEmpty {
+                        response = .init(choices: [.init(delta: .init(reasoningContent: afterReasoningBegin))])
+                    } else {
+                        response = .init(choices: [])
                     }
-                    if !afterReasoningBegin.isEmpty {
-                        delta.append(.init(reasoningContent: afterReasoningBegin))
-                    }
-                    response = .init(choices: delta.map { .init(delta: $0) })
-                    // 如果刚好在 </think> 前面截断了 那就只有服务器知道要不要 cut 了
-                    // UI 上面可以处理一下
                 }
             }
         } else {
             // 我们已经在推理内容中，检查是否有结束标记
+            hasProcessedReasoningToken = true
             if let range = bufferContent.range(of: REASONING_END_TOKEN) {
                 // 找到结束标记 - 退出推理模式
                 isInsideReasoningContent = false
@@ -133,17 +146,95 @@ open class RemoteChatClient: ChatService {
                 let remainingText = String(bufferContent[range.upperBound...])
                     .trimmingCharactersFromStart(in: .whitespacesAndNewlines)
 
-                // 更新响应数据
-                response = .init(choices: [
-                    .init(delta: .init(reasoningContent: reasoningText)),
-                    .init(delta: .init(content: remainingText)),
-                ])
+                // 只发送reasoning，remainingText放到buffer避免丢失
+                if !reasoningText.isEmpty {
+                    response = .init(choices: [.init(delta: .init(reasoningContent: reasoningText))])
+                } else {
+                    response = .init(choices: [])
+                }
+                // 将remaining内容放到buffer，下次作为普通内容发送
+                if !remainingText.isEmpty {
+                    contentBuffer = remainingText
+                }
             } else {
                 // 仍在推理内容中
                 response = .init(choices: [.init(delta: .init(
                     reasoningContent: bufferContent
                 ))])
             }
+        }
+
+        if !hasProcessedReasoningToken,
+           !previousBuffer.isEmpty,
+           !previousBuffer.contains(REASONING_START_TOKEN),
+           !previousBuffer.contains(REASONING_END_TOKEN)
+        {
+            if response.choices.isEmpty {
+                response = .init(choices: [.init(delta: .init(content: previousBuffer))])
+            } else {
+                var updatedChoices = response.choices
+                let firstChoice = updatedChoices[0]
+                let mergedContent = previousBuffer + (firstChoice.delta.content ?? "")
+                let updatedDelta = ChatCompletionChunk.Choice.Delta(
+                    content: mergedContent,
+                    reasoning: firstChoice.delta.reasoning,
+                    reasoningContent: firstChoice.delta.reasoningContent,
+                    refusal: firstChoice.delta.refusal,
+                    role: firstChoice.delta.role,
+                    toolCalls: firstChoice.delta.toolCalls
+                )
+                updatedChoices[0] = .init(
+                    delta: updatedDelta,
+                    finishReason: firstChoice.finishReason,
+                    index: firstChoice.index
+                )
+                response.choices = updatedChoices
+            }
+        }
+    }
+
+    private func flushBufferedContent(
+        _ contentBuffer: inout String,
+        isInsideReasoningContent: inout Bool,
+        continuation: AsyncStream<ChatServiceStreamObject>.Continuation
+    ) {
+        guard !contentBuffer.isEmpty else { return }
+
+        if isInsideReasoningContent {
+            continuation.yield(.chatCompletionChunk(chunk: .init(
+                choices: [.init(delta: .init(reasoningContent: contentBuffer))]
+            )))
+            contentBuffer = ""
+            isInsideReasoningContent = false
+            return
+        }
+
+        while !contentBuffer.isEmpty {
+            let pendingBuffer = contentBuffer
+            var response = ChatCompletionChunk(choices: [])
+            processReasoningContent([], [], &isInsideReasoningContent, &contentBuffer, &response)
+
+            if !response.choices.isEmpty {
+                continuation.yield(.chatCompletionChunk(chunk: response))
+                continue
+            }
+
+            if pendingBuffer.contains(REASONING_START_TOKEN) || pendingBuffer.contains(REASONING_END_TOKEN) {
+                let sanitized = pendingBuffer
+                    .replacingOccurrences(of: REASONING_START_TOKEN, with: "")
+                    .replacingOccurrences(of: REASONING_END_TOKEN, with: "")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                if !sanitized.isEmpty {
+                    continuation.yield(.chatCompletionChunk(chunk: .init(
+                        choices: [.init(delta: .init(reasoningContent: sanitized))]
+                    )))
+                }
+            } else {
+                continuation.yield(.chatCompletionChunk(chunk: .init(
+                    choices: [.init(delta: .init(content: pendingBuffer))]
+                )))
+            }
+            contentBuffer = ""
         }
     }
 
@@ -166,6 +257,7 @@ open class RemoteChatClient: ChatService {
 
                 var canDecodeReasoningContent = true
                 var isInsideReasoningContent = false
+                var contentBuffer = "" // 用于缓存跨chunk的内容
                 let toolCallCollector: ToolCallCollector = .init()
                 var chunkCount = 0
                 var totalContentLength = 0
@@ -207,7 +299,7 @@ open class RemoteChatClient: ChatService {
                             // Only process <think> tags if API doesn't have native reasoning support
                             if canDecodeReasoningContent {
                                 let content = response.choices.map(\.delta).compactMap(\.content)
-                                self.processReasoningContent(content, [], &isInsideReasoningContent, &response)
+                                self.processReasoningContent(content, [], &isInsideReasoningContent, &contentBuffer, &response)
                             }
 
                             for delta in response.choices {
@@ -234,6 +326,9 @@ open class RemoteChatClient: ChatService {
                         logger.info("connection was closed.")
                     }
                 }
+
+                // 刷新缓冲区中剩余的内容
+                self.flushBufferedContent(&contentBuffer, isInsideReasoningContent: &isInsideReasoningContent, continuation: continuation)
 
                 toolCallCollector.finalizeCurrentDeltaContent()
                 for call in toolCallCollector.pendingRequests {
