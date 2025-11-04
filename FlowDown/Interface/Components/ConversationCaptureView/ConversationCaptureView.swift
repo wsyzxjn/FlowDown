@@ -66,8 +66,9 @@ class ConversationCaptureView: UIView {
         addSubview(listView)
         listView.snp.makeConstraints { make in
             make.top.equalTo(titleBar.snp.bottom).offset(16 - 4)
+            make.width.equalTo(layoutWidth)
             make.left.right.equalToSuperview()
-            listHeightConstraint = make.height.equalTo(0).priority(.required).constraint
+            listHeightConstraint = make.height.equalTo(5000).priority(.required).constraint
         }
 
         addSubview(sepB)
@@ -122,8 +123,13 @@ class ConversationCaptureView: UIView {
 
         controller.view.addSubview(self)
         snp.remakeConstraints { make in
-            make.top.equalTo(controller.view.snp.bottom)
-            make.left.equalTo(controller.view.snp.right)
+            #if DEBUG
+                make.top.equalTo(controller.view.snp.top)
+                make.centerX.equalToSuperview()
+            #else
+                make.top.equalTo(controller.view.snp.top)
+                make.left.equalTo(controller.view.snp.right)
+            #endif
             make.width.equalTo(layoutWidth).priority(.required)
             make.height.equalTo(5000).priority(.required)
         }
