@@ -21,9 +21,8 @@ INFOPLIST_KEY_UISupportsDocumentBrowser[config=Debug][sdk=*][arch=*] = YES
 INFOPLIST_FILE = FlowDown/Resources/InfoPlist/Info-iOS.plist
 INFOPLIST_FILE[sdk=macosx*] = FlowDown/Resources/InfoPlist/Info-Catalyst.plist
 
-CODE_SIGN_ENTITLEMENTS = FlowDown/Resources/Entitlements/Entitlements.entitlements
-ENABLE_RESOURCE_ACCESS_CAMERA[sdk=macosx*] = NO
-ENABLE_RESOURCE_ACCESS_LOCATION[sdk=macosx*] = NO
+CODE_SIGN_ENTITLEMENTS = FlowDown/Resources/Entitlements/Entitlements-iOS.entitlements
+CODE_SIGN_ENTITLEMENTS[sdk=macosx*] = FlowDown/Resources/Entitlements/Entitlements-Catalyst.entitlements
 
 SUPPORTED_PLATFORMS = iphoneos iphonesimulator
 SUPPORTED_PLATFORMS[sdk=macosx*] = macosx
