@@ -19,7 +19,7 @@ jobs:
             destination: "generic/platform=iOS"
             archive_path: BuildArtifacts/ios.xcarchive
           - target: macos
-            scheme: FlowDown-Catalyst
+            scheme: FlowDown
             destination: "generic/platform=macOS,variant=Mac Catalyst"
             archive_path: BuildArtifacts/macos.xcarchive
     steps:
