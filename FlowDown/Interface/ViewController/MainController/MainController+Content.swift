@@ -40,9 +40,8 @@ extension MainController {
         chatView.onCreateNewChat = { [weak self] in
             self?.requestNewChat()
         }
-        chatView.onSuggestNewChat = { [weak self] id in
-            guard let self else { return }
-            load(id)
+        chatView.onSuggestNewChat = { id in
+            ChatSelection.shared.select(id, options: [.collapseSidebar, .focusEditor])
         }
         chatView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -71,9 +70,31 @@ extension MainController {
     private func setupChatSelectionSubscription() {
         ChatSelection.shared.selection
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] conversationId in
-                Logger.ui.debugFile("MainController received chat selection update: \(conversationId ?? "nil")")
-                self?.load(conversationId)
+            .sink { [weak self] selection in
+                guard let self else { return }
+                switch selection {
+                case .none:
+                    Logger.ui.debugFile("MainController received chat selection update: none")
+                    load(nil)
+                case let .conversation(identifier, options):
+                    let optionDescription: String = {
+                        var components: [String] = []
+                        if options.contains(.collapseSidebar) { components.append("collapseSidebar") }
+                        if options.contains(.focusEditor) { components.append("focusEditor") }
+                        return components.isEmpty ? "none" : components.joined(separator: ",")
+                    }()
+                    Logger.ui.debugFile("MainController received chat selection update: \(identifier) options: \(optionDescription)")
+                    load(identifier)
+                    if options.contains(.collapseSidebar),
+                       !allowSidebarPersistence,
+                       !isSidebarCollapsed
+                    {
+                        view.doWithAnimation { self.isSidebarCollapsed = true }
+                    }
+                    if options.contains(.focusEditor) {
+                        DispatchQueue.main.async { self.chatView.focusEditor() }
+                    }
+                }
             }
             .store(in: &cancellables)
     }
@@ -84,12 +105,6 @@ extension MainController {
         guard let identifier = conv else { return }
 
         chatView.use(conversation: identifier)
-        if !isSidebarCollapsed, // 已经展开的状态下
-           !allowSidebarPersistence // sidebar 和 chatview 水火不容
-        {
-            // 关上
-            view.doWithAnimation { self.isSidebarCollapsed = true }
-        }
 
         let session = ConversationSessionManager.shared.session(for: identifier)
         session.updateModels()

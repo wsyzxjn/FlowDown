@@ -301,9 +301,6 @@ class MainController: UIViewController {
     @objc func requestNewChat() {
         let conv = ConversationManager.shared.createNewConversation()
         sidebar.newChatDidCreated(conv.id)
-        chatView.use(conversation: conv.id) { [weak self] in
-            self?.chatView.focusEditor()
-        }
     }
 
     @objc func openSettings() {
@@ -392,11 +389,5 @@ class MainController: UIViewController {
 extension MainController: NewChatButton.Delegate {
     func newChatDidCreated(_ identifier: Conversation.ID) {
         sidebar.newChatDidCreated(identifier)
-        if !allowSidebarPersistence {
-            view.doWithAnimation { self.isSidebarCollapsed = true }
-        }
-        chatView.use(conversation: identifier) { [weak self] in
-            self?.chatView.focusEditor()
-        }
     }
 }

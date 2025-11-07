@@ -104,11 +104,11 @@ extension ConversationSelectionView {
         @objc func didSelectCell() {
             guard let id = conversationIdentifier else { return }
             Logger.ui.debugFile("did select conversation cell: \(id)")
-            ChatSelection.shared.select(id)
+            ChatSelection.shared.select(id, options: [.collapseSidebar])
         }
 
         @objc func selectNewConv(id: Conversation.ID) {
-            ChatSelection.shared.select(id)
+            ChatSelection.shared.select(id, options: [.collapseSidebar, .focusEditor])
         }
 
         private var sidebar: Sidebar? {

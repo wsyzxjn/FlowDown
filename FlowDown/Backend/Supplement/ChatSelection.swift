@@ -10,10 +10,42 @@ import Foundation
 import Storage
 
 class ChatSelection {
+    struct Options: OptionSet {
+        let rawValue: Int
+
+        static let collapseSidebar = Options(rawValue: 1 << 0)
+        static let focusEditor = Options(rawValue: 1 << 1)
+
+        static let none: Options = []
+    }
+
+    enum Selection: Equatable {
+        case none
+        case conversation(id: Conversation.ID, options: Options = .none)
+
+        var identifier: Conversation.ID? {
+            switch self {
+            case .none:
+                nil
+            case let .conversation(id, _):
+                id
+            }
+        }
+
+        var options: Options {
+            switch self {
+            case .none:
+                .none
+            case let .conversation(_, options):
+                options
+            }
+        }
+    }
+
     static let shared = ChatSelection()
 
-    private let subject = CurrentValueSubject<Conversation.ID?, Never>(nil)
-    let selection: AnyPublisher<Conversation.ID?, Never>
+    private let subject = CurrentValueSubject<Selection, Never>(.none)
+    let selection: AnyPublisher<Selection, Never>
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -24,28 +56,70 @@ class ChatSelection {
 
         let conversations = sdb.conversationList()
         if let firstConversation = conversations.first {
-            subject.send(firstConversation.id)
+            subject.send(.conversation(id: firstConversation.id))
         } else {
             let initialConversation = ConversationManager.shared.createNewConversation(autoSelect: false)
-            subject.send(initialConversation.id)
+            subject.send(.conversation(id: initialConversation.id))
         }
 
         // Listen for conversation list changes and auto-create conversation if list becomes empty
         ConversationManager.shared.conversations
             .receive(on: DispatchQueue.main)
             .sink { [weak self] conversationDict in
-                if conversationDict.isEmpty, self?.subject.value != nil {
-                    // Current selection is invalid (conversation was deleted), create a new one
-                    Logger.ui.infoFile("No conversations left, auto-creating a new conversation")
-                    let newConversation = ConversationManager.shared.createNewConversation(autoSelect: false)
-                    self?.subject.send(newConversation.id)
+                guard let self else { return }
+                guard conversationDict.isEmpty else { return }
+                if case .none = subject.value {
+                    return
                 }
+
+                Logger.ui.infoFile("No conversations left, auto-creating a new conversation")
+                let newConversation = ConversationManager.shared.createNewConversation(autoSelect: false)
+                subject.send(.conversation(id: newConversation.id))
             }
             .store(in: &cancellables)
     }
 
-    func select(_ conversationId: Conversation.ID?) {
-        Logger.ui.debugFile("ChatSelection.select called with: \(conversationId ?? "nil")")
-        subject.send(conversationId)
+    func select(_ selection: Selection) {
+        Logger.ui.debugFile("ChatSelection.select called with: \(selection.debugDescription)")
+        subject.send(selection)
+    }
+
+    func select(_ conversationId: Conversation.ID?, options: Options = .none) {
+        guard let conversationId else {
+            select(.none)
+            return
+        }
+        select(.conversation(id: conversationId, options: options))
+    }
+
+    func select(_ conversationId: Conversation.ID) {
+        select(conversationId, options: .none)
+    }
+}
+
+private extension ChatSelection.Selection {
+    var debugDescription: String {
+        switch self {
+        case .none:
+            "none"
+        case let .conversation(id, options):
+            "conversation: \(id) options: \(options.description)"
+        }
+    }
+}
+
+private extension ChatSelection.Options {
+    var description: String {
+        var components: [String] = []
+        if contains(.collapseSidebar) {
+            components.append("collapseSidebar")
+        }
+        if contains(.focusEditor) {
+            components.append("focusEditor")
+        }
+        if components.isEmpty {
+            components.append("none")
+        }
+        return components.joined(separator: ",")
     }
 }

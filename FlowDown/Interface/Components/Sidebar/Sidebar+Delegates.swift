@@ -11,7 +11,7 @@ import UIKit
 
 extension Sidebar: NewChatButton.Delegate {
     func newChatDidCreated(_ identifier: Conversation.ID) {
-        ChatSelection.shared.select(identifier)
+        ChatSelection.shared.select(identifier, options: [.collapseSidebar, .focusEditor])
     }
 }
 

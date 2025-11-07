@@ -70,10 +70,22 @@ class ConversationSelectionView: UIView {
         )
         .debounce(for: .milliseconds(16), scheduler: DispatchQueue.main)
         .ensureMainThread()
-        .sink { [weak self] _, identifier in
+        .sink { [weak self] _, selection in
             guard let self else { return }
             updateDataSource()
-            Logger.ui.debugFile("ConversationSelectionView received global selection: \(identifier ?? "nil")")
+            let identifier = selection.identifier
+            let optionDescription: String = {
+                switch selection {
+                case .none:
+                    return "none"
+                case let .conversation(_, options):
+                    var components: [String] = []
+                    if options.contains(.collapseSidebar) { components.append("collapseSidebar") }
+                    if options.contains(.focusEditor) { components.append("focusEditor") }
+                    return components.isEmpty ? "none" : components.joined(separator: ",")
+                }
+            }()
+            Logger.ui.debugFile("ConversationSelectionView received global selection: \(identifier ?? "nil") options: \(optionDescription)")
             let selectedIndexPath = Set(tableView.indexPathsForSelectedRows ?? [])
             for index in selectedIndexPath {
                 tableView.deselectRow(at: index, animated: false)

@@ -93,7 +93,7 @@ extension ConversationManager {
 
         session.prepareSystemPrompt()
 
-        if autoSelect { ChatSelection.shared.select(object.id) }
+        if autoSelect { ChatSelection.shared.select(object.id, options: [.collapseSidebar, .focusEditor]) }
 
         return object
     }
