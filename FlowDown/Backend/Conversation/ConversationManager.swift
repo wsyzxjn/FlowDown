@@ -44,7 +44,7 @@ class ConversationManager: NSObject {
         NotificationCenter.default.publisher(for: SyncEngine.ConversationChanged)
             .debounce(for: .seconds(2), scheduler: RunLoop.main)
             .sink { [weak self] _ in
-                logger.info("Recived SyncEngine.ConversationChanged")
+                logger.infoFile("Recived SyncEngine.ConversationChanged")
                 self?.scanAll()
             }
             .store(in: &cancellables)
@@ -52,7 +52,7 @@ class ConversationManager: NSObject {
         NotificationCenter.default.publisher(for: SyncEngine.LocalDataDeleted)
             .debounce(for: .seconds(2), scheduler: RunLoop.main)
             .sink { [weak self] _ in
-                logger.info("Recived SyncEngine.LocalDataDeleted")
+                logger.infoFile("Recived SyncEngine.LocalDataDeleted")
                 self?.scanAll()
             }
             .store(in: &cancellables)

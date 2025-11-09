@@ -66,7 +66,7 @@ package extension Storage {
             where: Conversation.Properties.objectId == conversationId
         )
 
-        Logger.syncEngine.info("handleRemoteDeletedConversation \(conversationId)")
+        Logger.syncEngine.infoFile("handleRemoteDeletedConversation \(conversationId)")
     }
 
     private func handleRemoteDeletedMessage(messageId: String, handle: Handle) throws {
@@ -75,7 +75,7 @@ package extension Storage {
             where: Message.Properties.objectId == messageId
         )
 
-        Logger.syncEngine.info("handleRemoteDeletedMessage \(messageId)")
+        Logger.syncEngine.infoFile("handleRemoteDeletedMessage \(messageId)")
     }
 
     private func handleRemoteDeletedAttachment(attachmentId: String, handle: Handle) throws {
@@ -84,7 +84,7 @@ package extension Storage {
             where: Attachment.Properties.objectId == attachmentId
         )
 
-        Logger.syncEngine.info("handleRemoteDeletedAttachment \(attachmentId)")
+        Logger.syncEngine.infoFile("handleRemoteDeletedAttachment \(attachmentId)")
     }
 
     private func handleRemoteDeletedCloudModel(objectId: String, handle: Handle) throws {
@@ -93,7 +93,7 @@ package extension Storage {
             where: CloudModel.Properties.objectId == objectId
         )
 
-        Logger.syncEngine.info("handleRemoteDeletedCloudModel \(objectId)")
+        Logger.syncEngine.infoFile("handleRemoteDeletedCloudModel \(objectId)")
     }
 
     private func handleRemoteDeletedModelContextServer(objectId: String, handle: Handle) throws {
@@ -102,7 +102,7 @@ package extension Storage {
             where: ModelContextServer.Properties.objectId == objectId
         )
 
-        Logger.syncEngine.info("handleRemoteDeletedModelContextServer \(objectId)")
+        Logger.syncEngine.infoFile("handleRemoteDeletedModelContextServer \(objectId)")
     }
 
     private func handleRemoteDeletedMemory(objectId: String, handle: Handle, modified _: Date = .now) throws {
@@ -111,7 +111,7 @@ package extension Storage {
             where: Memory.Properties.objectId == objectId
         )
 
-        Logger.syncEngine.info("handleRemoteDeletedMemory \(objectId)")
+        Logger.syncEngine.infoFile("handleRemoteDeletedMemory \(objectId)")
     }
 }
 
@@ -166,7 +166,7 @@ package extension Storage {
         guard let payload = serverRecord.payloadData else { return }
 
         guard let remoteObject = try? Conversation.decodePayload(payload) else {
-            Logger.syncEngine.error("handleRemoteUpsertConversation decodePayload fail")
+            Logger.syncEngine.errorFile("handleRemoteUpsertConversation decodePayload fail")
             return
         }
 
@@ -200,7 +200,7 @@ package extension Storage {
         guard let payload = serverRecord.payloadData else { return }
 
         guard let remoteObject = try? Message.decodePayload(payload) else {
-            Logger.syncEngine.error("handleRemoteUpsertMessage decodePayload fail")
+            Logger.syncEngine.errorFile("handleRemoteUpsertMessage decodePayload fail")
             return
         }
 
@@ -234,7 +234,7 @@ package extension Storage {
         guard let payload = serverRecord.payloadData else { return }
 
         guard let remoteObject = try? Attachment.decodePayload(payload) else {
-            Logger.syncEngine.error("handleRemoteUpsertAttachment decodePayload fail")
+            Logger.syncEngine.errorFile("handleRemoteUpsertAttachment decodePayload fail")
             return
         }
 
@@ -268,7 +268,7 @@ package extension Storage {
         guard let payload = serverRecord.payloadData else { return }
 
         guard let remoteObject = try? CloudModel.decodePayload(payload) else {
-            Logger.syncEngine.error("handleRemoteUpsertCloudModel decodePayload fail")
+            Logger.syncEngine.errorFile("handleRemoteUpsertCloudModel decodePayload fail")
             return
         }
 
@@ -302,7 +302,7 @@ package extension Storage {
         guard let payload = serverRecord.payloadData else { return }
 
         guard let remoteObject = try? ModelContextServer.decodePayload(payload) else {
-            Logger.syncEngine.error("handleRemoteUpsertModelContextServer decodePayload fail")
+            Logger.syncEngine.errorFile("handleRemoteUpsertModelContextServer decodePayload fail")
             return
         }
 
@@ -346,7 +346,7 @@ package extension Storage {
         guard let payload = serverRecord.payloadData else { return }
 
         guard let remoteObject = try? Memory.decodePayload(payload) else {
-            Logger.syncEngine.error("handleRemoteUpsertMemory decodePayload fail")
+            Logger.syncEngine.errorFile("handleRemoteUpsertMemory decodePayload fail")
             return
         }
 

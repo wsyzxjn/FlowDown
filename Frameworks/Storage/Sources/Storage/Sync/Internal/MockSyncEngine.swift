@@ -69,10 +69,10 @@ package final class MockSyncEngine: SyncEngineProtocol {
     }
 
     private func processPendingDatabaseChanges(reason: CKSyncEngine.SyncReason, options _: CKSyncEngine.SendChangesOptions) async throws {
-        Logger.syncEngine.info("Will Processing database changes by reason: \(reason)")
+        Logger.syncEngine.infoFile("Will Processing database changes by reason: \(reason)")
         let pendingDatabaseChanges = state.pendingDatabaseChanges
         guard !pendingDatabaseChanges.isEmpty else {
-            Logger.syncEngine.info("Processing empty set of database changes.")
+            Logger.syncEngine.infoFile("Processing empty set of database changes.")
             return
         }
 
@@ -95,7 +95,7 @@ package final class MockSyncEngine: SyncEngineProtocol {
 
         try Task.checkCancellation()
 
-        Logger.syncEngine.info("will sent saveZone: \(recordZonesToSave) deleteZone: \(recordZoneIDsToDelete)")
+        Logger.syncEngine.infoFile("will sent saveZone: \(recordZonesToSave) deleteZone: \(recordZoneIDsToDelete)")
 
         let (saveResults, deleteResults) = try await database.modifyRecordZones(saving: recordZonesToSave, deleting: recordZoneIDsToDelete)
 
@@ -146,10 +146,10 @@ package final class MockSyncEngine: SyncEngineProtocol {
     }
 
     private func processPendingRecordZoneChanges(reason: CKSyncEngine.SyncReason, options: CKSyncEngine.SendChangesOptions) async throws {
-        Logger.syncEngine.info("Will Processing record zone changes by reason: \(reason)")
+        Logger.syncEngine.infoFile("Will Processing record zone changes by reason: \(reason)")
         let pendingRecordZoneChanges = state.pendingRecordZoneChanges
         guard !pendingRecordZoneChanges.isEmpty else {
-            Logger.syncEngine.info("Processing empty set of record zone changes.")
+            Logger.syncEngine.infoFile("Processing empty set of record zone changes.")
             return
         }
 
@@ -157,7 +157,7 @@ package final class MockSyncEngine: SyncEngineProtocol {
 
         let batch = await delegate.nextRecordZoneChangeBatch(reason: reason, options: options, syncEngine: self)
         guard let batch else {
-            Logger.syncEngine.info("Processing empty batch of record zone changes.")
+            Logger.syncEngine.infoFile("Processing empty batch of record zone changes.")
             return
         }
 

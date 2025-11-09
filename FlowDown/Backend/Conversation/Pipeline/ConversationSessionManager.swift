@@ -69,7 +69,7 @@ final class ConversationSessionManager {
     private func handleMessageChanged(_ notification: Notification) {
         // Only update message lists; do not touch conversation sidebar (no scanAll here).
         guard let info = notification.userInfo?[SyncEngine.MessageNotificationKey] as? MessageNotificationInfo else {
-            logger.info("MessageChanged without detail; refreshing all cached sessions")
+            logger.infoFile("MessageChanged without detail; refreshing all cached sessions")
             for (_, session) in sessions {
                 refreshSafely(session)
             }
@@ -94,7 +94,7 @@ final class ConversationSessionManager {
     private func refreshSafely(_ session: Session) {
         // Avoid refreshing while a streaming task is active to prevent UI errors.
         if let task = session.currentTask, !task.isCancelled {
-            logger.debug("Defer refresh for session \(String(describing: session.id)) due to active task")
+            logger.debugFile("Defer refresh for session \(String(describing: session.id)) due to active task")
             if !pendingRefresh.contains(session.id) {
                 pendingRefresh.insert(session.id)
             }
@@ -111,7 +111,7 @@ final class ConversationSessionManager {
             return
         }
         // Task completed, now safe to refresh
-        logger.info("Executing pending refresh for session \(String(describing: sessionID))")
+        logger.infoFile("Executing pending refresh for session \(String(describing: sessionID))")
         session.refreshContentsFromDatabase()
         pendingRefresh.remove(sessionID)
     }

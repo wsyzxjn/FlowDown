@@ -65,11 +65,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken _: Data) {
-        logger.info("Did register for remote notifications")
+        logger.infoFile("Did register for remote notifications")
     }
 
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        logger.error("ERROR: Failed to register for notifications: \(error.localizedDescription)")
+        logger.errorFile("ERROR: Failed to register for notifications: \(error.localizedDescription)")
     }
 
     func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -77,7 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler(.noData)
             return
         }
-        logger.info("Received cloudkit notification: \(notification)")
+        logger.infoFile("Received cloudkit notification: \(notification)")
 
         guard notification.containerIdentifier == CloudKitConfig.containerIdentifier else {
             completionHandler(.noData)
@@ -86,11 +86,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Task {
             do {
-                logger.info("cloudkit notification fetchChanges")
+                logger.infoFile("cloudkit notification fetchChanges")
                 try await syncEngine.fetchChanges()
                 completionHandler(.newData)
             } catch {
-                logger.error("cloudkit notification fetchLatestChanges: \(error)")
+                logger.errorFile("cloudkit notification fetchLatestChanges: \(error)")
                 completionHandler(.failed)
             }
         }

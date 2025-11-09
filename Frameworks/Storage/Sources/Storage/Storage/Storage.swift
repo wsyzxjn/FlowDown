@@ -99,7 +99,7 @@ public class Storage {
         db.enableAutoCompression(true)
 
         // swiftformat:disable:next redundantSelf
-        Logger.database.info("[*] database location: \(self.databaseLocation)")
+        Logger.database.infoFile("[*] database location: \(self.databaseLocation)")
 
         checkMigration()
 
@@ -233,7 +233,7 @@ public extension Storage {
             let deleteAt = nowDate.addingTimeInterval(-Storage.DeleteAfterDuration)
 
             do {
-                Logger.database.info("clearDeletedRecords begin")
+                Logger.database.infoFile("clearDeletedRecords begin")
                 try db.run(transaction: {
                     try $0.delete(fromTable: Attachment.tableName, where: Attachment.Properties.modified <= deleteAt && Attachment.Properties.removed == true)
                     try $0.delete(fromTable: Message.tableName, where: Message.Properties.modified <= deleteAt && Message.Properties.removed == true)
@@ -267,10 +267,10 @@ public extension Storage {
                 })
 
                 let elapsed = Date.now.timeIntervalSince(nowDate) * 1000.0
-                Logger.database.info("clearDeletedRecords end elapsed \(Int(elapsed), privacy: .public)ms")
+                Logger.database.infoFile("clearDeletedRecords end elapsed \(Int(elapsed))ms")
             } catch {
                 let elapsed = Date.now.timeIntervalSince(nowDate) * 1000.0
-                Logger.database.error("clearDeletedRecords elapsed \(Int(elapsed), privacy: .public)ms error \(error.localizedDescription, privacy: .public)")
+                Logger.database.errorFile("clearDeletedRecords elapsed \(Int(elapsed))ms error \(error.localizedDescription)")
             }
         }
     }
@@ -339,7 +339,7 @@ public extension Storage {
         originPath.removeLast()
         let backupDatabaseDir = URL(filePath: "\(originPath).backup")
 
-        Logger.database.info("Import the database \(unzipTarget, privacy: .public)")
+        Logger.database.infoFile("Import the database \(unzipTarget)")
 
         do {
             try fm.createDirectory(at: unzipTarget, withIntermediateDirectories: true)
@@ -350,7 +350,7 @@ public extension Storage {
                 throw NSError(domain: "Storage", code: -1, userInfo: [NSLocalizedDescriptionKey: "Missing database.db in archive"])
             }
 
-            Logger.database.info("Import the database and execute the migration.")
+            Logger.database.infoFile("Import the database and execute the migration.")
             /// 内部会按照数据迁移的流程走,确保相关表一定是存在的
             let tempDB = try Storage(name: "Import", databaseDir: unzipTarget)
             /// 初始化上传队列
@@ -359,14 +359,14 @@ public extension Storage {
             /// 关闭数据库
             tempDB.db.close()
 
-            Logger.database.info("Database migration has been successfully imported.")
+            Logger.database.infoFile("Database migration has been successfully imported.")
 
             Task { @MainActor [self] in
                 db.purge()
                 db.close()
 
                 defer {
-                    Logger.database.info("clear import database tempDir \(tempDir, privacy: .public)")
+                    Logger.database.infoFile("clear import database tempDir \(tempDir)")
                     try? fm.removeItem(at: tempDir)
                 }
 
@@ -375,21 +375,21 @@ public extension Storage {
                         try fm.removeItem(at: backupDatabaseDir)
                     }
 
-                    Logger.database.info("Back up the current database")
+                    Logger.database.infoFile("Back up the current database")
                     // 备份旧目录
                     try fm.moveItem(at: databaseDir, to: backupDatabaseDir)
-                    Logger.database.info("Replace the new database")
+                    Logger.database.infoFile("Replace the new database")
                     // 移动新目录
                     try fm.moveItem(at: unzipTarget, to: databaseDir)
-                    Logger.database.info("Delete the original database")
+                    Logger.database.infoFile("Delete the original database")
                     // 删除备份目录
                     try fm.removeItem(at: backupDatabaseDir)
 
-                    Logger.database.info("Database import successful")
+                    Logger.database.infoFile("Database import successful")
 
                     completeHandler(.success(()))
                 } catch {
-                    Logger.database.error("imported database error: \(error, privacy: .public)")
+                    Logger.database.errorFile("imported database error: \(error)")
                     if fm.fileExists(atPath: backupDatabaseDir.path) {
                         try? fm.moveItem(at: backupDatabaseDir, to: databaseDir)
                     }
@@ -400,12 +400,12 @@ public extension Storage {
             }
 
         } catch {
-            Logger.database.error("imported database error: \(error, privacy: .public)")
+            Logger.database.errorFile("imported database error: \(error)")
             if fm.fileExists(atPath: backupDatabaseDir.path) {
                 try? fm.moveItem(at: backupDatabaseDir, to: databaseDir)
             }
 
-            Logger.database.info("clear import database tempDir \(tempDir, privacy: .public)")
+            Logger.database.infoFile("clear import database tempDir \(tempDir)")
             try? fm.removeItem(at: tempDir)
 
             Task { @MainActor in

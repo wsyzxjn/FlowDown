@@ -48,7 +48,7 @@ open class RemoteChatClient: ChatService {
 
     public func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
         let model = model
-        logger.info("starting non-streaming request to model: \(model) with \(body.messages.count) messages")
+        logger.infoFile("starting non-streaming request to model: \(model) with \(body.messages.count) messages")
         let startTime = Date()
         var body = body
         body.model = model
@@ -56,9 +56,9 @@ open class RemoteChatClient: ChatService {
         body.streamOptions = nil
         let request = try request(for: body, additionalField: additionalField)
         let (data, _) = try await session.data(for: request)
-        logger.debug("received response data: \(data.count) bytes")
+        logger.debugFile("received response data: \(data.count) bytes")
         if let error = extractError(fromInput: data) {
-            logger.error("received error from server: \(error.localizedDescription)")
+            logger.errorFile("received error from server: \(error.localizedDescription)")
             throw error
         }
         var response = try JSONDecoder().decode(ChatResponseBody.self, from: data)
@@ -69,7 +69,7 @@ open class RemoteChatClient: ChatService {
         }
         let duration = Date().timeIntervalSince(startTime)
         let contentLength = response.choices.first?.message.content?.count ?? 0
-        logger.info("completed non-streaming request in \(String(format: "%.2f", duration))s, content length: \(contentLength)")
+        logger.infoFile("completed non-streaming request in \(String(format: "%.2f", duration))s, content length: \(contentLength)")
         return response
     }
 
@@ -253,7 +253,7 @@ open class RemoteChatClient: ChatService {
         // streamOptions is not supported when running up on cohere api
         // body.streamOptions = .init(includeUsage: true)
         let request = try request(for: body, additionalField: additionalField)
-        logger.info("starting streaming request to model: \(model) with \(body.messages.count) messages, temperature: \(body.temperature ?? 1.0)")
+        logger.infoFile("starting streaming request to model: \(model) with \(body.messages.count) messages, temperature: \(body.temperature ?? 1.0)")
 
         let stream = AsyncStream<ChatServiceStreamObject> { continuation in
             Task.detached {
@@ -272,9 +272,9 @@ open class RemoteChatClient: ChatService {
                 for await event in dataTask.events() {
                     switch event {
                     case .open:
-                        logger.info("connection was opened.")
+                        logger.infoFile("connection was opened.")
                     case let .error(error):
-                        logger.error("received an error: \(error)")
+                        logger.errorFile("received an error: \(error)")
                         self.collect(error: error)
                     case let .event(event):
                         guard let data = event.data?.data(using: .utf8) else {
@@ -282,7 +282,7 @@ open class RemoteChatClient: ChatService {
                         }
                         if let text = String(data: data, encoding: .utf8) {
                             if text.lowercased() == "[DONE]".lowercased() {
-                                logger.debug("received done from upstream")
+                                logger.debugFile("received done from upstream")
                                 continue
                             }
                         }
@@ -327,7 +327,7 @@ open class RemoteChatClient: ChatService {
                             self.collect(error: decodeError)
                         }
                     case .closed:
-                        logger.info("connection was closed.")
+                        logger.infoFile("connection was closed.")
                     }
                 }
 
@@ -338,7 +338,7 @@ open class RemoteChatClient: ChatService {
                 for call in toolCallCollector.pendingRequests {
                     continuation.yield(.tool(call: call))
                 }
-                logger.info("streaming completed: received \(chunkCount) chunks, total content length: \(totalContentLength), tool calls: \(toolCallCollector.pendingRequests.count)")
+                logger.infoFile("streaming completed: received \(chunkCount) chunks, total content length: \(totalContentLength), tool calls: \(toolCallCollector.pendingRequests.count)")
                 continuation.finish()
             }
         }
@@ -362,7 +362,7 @@ open class RemoteChatClient: ChatService {
             return
         }
         collectedErrors = error.localizedDescription
-        logger.error("collected error: \(error.localizedDescription)")
+        logger.errorFile("collected error: \(error.localizedDescription)")
     }
 
     private func extractError(fromInput input: Data) -> Swift.Error? {
@@ -410,11 +410,11 @@ open class RemoteChatClient: ChatService {
 
     private func request(for body: ChatRequestBody, additionalField: [String: Any] = [:]) throws -> URLRequest {
         guard let baseURL else {
-            logger.error("invalid base URL")
+            logger.errorFile("invalid base URL")
             throw Error.invalidURL
         }
         guard let apiKey else {
-            logger.error("invalid API key")
+            logger.errorFile("invalid API key")
             throw Error.invalidApiKey
         }
 
@@ -426,7 +426,7 @@ open class RemoteChatClient: ChatService {
         guard var urlComponents = URLComponents(string: baseURL),
               let pathComponents = URLComponents(string: path)
         else {
-            logger.error("failed to parse URL components from baseURL: \(baseURL), path: \(path)")
+            logger.errorFile("failed to parse URL components from baseURL: \(baseURL), path: \(path)")
             throw Error.invalidURL
         }
 
@@ -434,11 +434,11 @@ open class RemoteChatClient: ChatService {
         urlComponents.queryItems = pathComponents.queryItems
 
         guard let url = urlComponents.url else {
-            logger.error("failed to construct final URL from components")
+            logger.errorFile("failed to construct final URL from components")
             throw Error.invalidURL
         }
 
-        logger.debug("constructed request URL: \(url.absoluteString)")
+        logger.debugFile("constructed request URL: \(url.absoluteString)")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = try JSONEncoder().encode(body)
@@ -544,7 +544,7 @@ class ToolCallCollector {
             return
         }
         let call = ToolCallRequest(name: functionName, args: functionArguments)
-        logger.debug("tool call finalized: \(call.name) with args: \(call.args)")
+        logger.debugFile("tool call finalized: \(call.name) with args: \(call.args)")
         pendingRequests.append(call)
         functionName = ""
         functionArguments = ""

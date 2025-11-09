@@ -80,7 +80,7 @@ class BlockButton: UIButton {
     @objc private func onTapped() {
         guard !showsMenuAsPrimaryAction else { return }
         let text = textLabel.text ?? ""
-        logger.info("BlockButton tapped: \(text)")
+        logger.infoFile("BlockButton tapped: \(text)")
         puddingAnimate()
         actionBlock()
     }

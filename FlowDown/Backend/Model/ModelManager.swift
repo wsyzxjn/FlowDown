@@ -119,7 +119,7 @@ class ModelManager: NSObject {
         NotificationCenter.default.publisher(for: SyncEngine.CloudModelChanged)
             .debounce(for: .seconds(2), scheduler: RunLoop.main)
             .sink { [weak self] _ in
-                logger.info("Recived SyncEngine.CloudModelChanged")
+                logger.infoFile("Recived SyncEngine.CloudModelChanged")
                 guard let self else { return }
                 cloudModels.send(scanCloudModels())
             }
@@ -128,7 +128,7 @@ class ModelManager: NSObject {
         NotificationCenter.default.publisher(for: SyncEngine.LocalDataDeleted)
             .debounce(for: .seconds(2), scheduler: RunLoop.main)
             .sink { [weak self] _ in
-                logger.info("Recived SyncEngine.LocalDataDeleted")
+                logger.infoFile("Recived SyncEngine.LocalDataDeleted")
                 guard let self else { return }
                 cloudModels.send(scanCloudModels())
             }

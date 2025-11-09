@@ -426,7 +426,7 @@ extension RichEditorView: AttachmentsBar.Delegate {
 extension RichEditorView: QuickSettingBar.Delegate {
     func quickSettingBarBuildModelSelectionMenu() -> [UIMenuElement] {
         delegate?.onRichEditorBuildModelSelectionMenu { [weak self] in
-            self?.updateModelInfo()
+            self?.updateModelinfoFile()
         } ?? []
     }
 
@@ -438,7 +438,7 @@ extension RichEditorView: QuickSettingBar.Delegate {
         delegate?.onRichEditorBuildAlternativeToolsMenu(isEnabled: isEnabled, requestReload: requestReload) ?? []
     }
 
-    func updateModelInfo(postUpdate: Bool = true) {
+    func updateModelinfoFile(postUpdate: Bool = true) {
         let newModel = delegate?.onRichEditorRequestCurrentModelName()
         doWithAnimation { self.quickSettingBar.setModelName(newModel) }
         let newModelIdentifier = delegate?.onRichEditorRequestCurrentModelIdentifier()

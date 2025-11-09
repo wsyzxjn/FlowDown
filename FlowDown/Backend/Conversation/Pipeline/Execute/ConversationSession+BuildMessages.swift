@@ -125,7 +125,7 @@ extension ConversationSession {
                 }
             } else {
                 guard !attachment.textRepresentation.isEmpty else {
-                    logger.info("[-] image attachment ignored because not processed")
+                    logger.infoFile("[-] image attachment ignored because not processed")
                     return nil
                 }
                 return .user(content: .text(["[\(attachment.name)]", attachment.textRepresentation].joined(separator: "\n")))
@@ -148,7 +148,7 @@ extension ConversationSession {
                     }
                     return .user(content: .parts(parts))
                 } catch {
-                    logger.error("[-] audio attachment transcoding failed: \(error.localizedDescription)")
+                    logger.errorFile("[-] audio attachment transcoding failed: \(error.localizedDescription)")
                     return .user(content: .text("Audio attachment \"\(attachment.name)\" was skipped because transcoding failed."))
                 }
             } else {

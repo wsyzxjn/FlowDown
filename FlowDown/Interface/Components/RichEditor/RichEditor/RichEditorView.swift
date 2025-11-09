@@ -94,7 +94,7 @@ class RichEditorView: EditorSectionView {
 
         quickSettingBar.horizontalAdjustment = spacing
         Task { @MainActor in
-            updateModelInfo()
+            updateModelinfoFile()
             restoreEditorStatusIfPossible()
         }
         heightPublisher
@@ -190,7 +190,7 @@ class RichEditorView: EditorSectionView {
     }
 
     func updateModelName() {
-        updateModelInfo()
+        updateModelinfoFile()
     }
 
     func prepareForReuse() {
@@ -201,7 +201,7 @@ class RichEditorView: EditorSectionView {
 
     func use(identifier: String) {
         storage = .init(id: identifier)
-        updateModelInfo(postUpdate: false)
+        updateModelinfoFile(postUpdate: false)
         restoreEditorStatusIfPossible()
     }
 

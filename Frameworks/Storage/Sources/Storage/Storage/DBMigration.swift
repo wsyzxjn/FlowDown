@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logger
 import WCDBSwift
 
 protocol DBMigration {
@@ -42,7 +43,7 @@ struct MigrationV0ToV1: DBMigration {
 
     func migrate(db: Database) throws {
         let start = Date.now
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) begin")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) begin")
 
         try db.create(table: AttachmentV1.tableName, of: AttachmentV1.self)
         try db.create(table: MessageV1.tableName, of: MessageV1.self)
@@ -55,7 +56,7 @@ struct MigrationV0ToV1: DBMigration {
         try db.exec(StatementPragma().pragma(.userVersion).to(toVersion.rawValue))
 
         let elapsed = Date.now.timeIntervalSince(start) * 1000.0
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end elapsed \(Int(elapsed), privacy: .public)ms")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end elapsed \(Int(elapsed))ms")
     }
 }
 
@@ -67,7 +68,7 @@ struct MigrationV1ToV2: DBMigration {
 
     func migrate(db: Database) throws {
         let start = Date.now
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) begin")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) begin")
 
         if requiresDataMigration {
             try performDataMigration(db: db)
@@ -83,9 +84,9 @@ struct MigrationV1ToV2: DBMigration {
         }
 
         let elapsed = Date.now.timeIntervalSince(start) * 1000.0
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end elapsed \(Int(elapsed), privacy: .public)ms")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end elapsed \(Int(elapsed))ms")
 
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end")
     }
 
     private func performSchemaMigration(db: Database) throws {
@@ -119,7 +120,7 @@ struct MigrationV1ToV2: DBMigration {
                 let oldTableName = "\(table.tableName)\(oldTableSuffix)"
                 let alter = StatementAlterTable().alter(table: table.tableName).rename(to: oldTableName)
                 try db.exec(alter)
-                Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) rename \(table.tableName) -> \(oldTableName)")
+                Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) rename \(table.tableName) -> \(oldTableName)")
                 tableExists[table.tableName] = oldTableName
             }
         }
@@ -130,17 +131,17 @@ struct MigrationV1ToV2: DBMigration {
         try db.run(transaction: { handle in
             if let oldTableName = tableExists[CloudModelV1.tableName] {
                 let cloudModelCount = try migrateCloudModels(handle: handle, oldTableName: oldTableName)
-                Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) cloudModels \(cloudModelCount)")
+                Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) cloudModels \(cloudModelCount)")
             }
 
             if let oldTableName = tableExists[ModelContextServerV1.tableName] {
                 let modelContextServerCount = try migrateModelContextServers(handle: handle, oldTableName: oldTableName)
-                Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) modelContextServers \(modelContextServerCount)")
+                Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) modelContextServers \(modelContextServerCount)")
             }
 
             if let oldTableName = tableExists[MemoryV1.tableName] {
                 let memoryCount = try migrateMemorys(handle: handle, oldTableName: oldTableName)
-                Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) memorys \(memoryCount)")
+                Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) memorys \(memoryCount)")
             }
         })
 
@@ -154,7 +155,7 @@ struct MigrationV1ToV2: DBMigration {
                 guard !conversationsMap.isEmpty else {
                     return
                 }
-                Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) conversations \(conversationsMap.count)")
+                Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) conversations \(conversationsMap.count)")
             })
         }
 
@@ -165,7 +166,7 @@ struct MigrationV1ToV2: DBMigration {
                 guard !messagesMap.isEmpty else {
                     return
                 }
-                Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) messages \(messagesMap.count)")
+                Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) messages \(messagesMap.count)")
             })
         }
 
@@ -176,7 +177,7 @@ struct MigrationV1ToV2: DBMigration {
                 guard !attachments.isEmpty else {
                     return
                 }
-                Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) attachments \(attachments.count)")
+                Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) attachments \(attachments.count)")
             })
         }
 
@@ -382,7 +383,7 @@ struct MigrationV1ToV2: DBMigration {
     /// 初始化上传队列
     private func initializeUploadQueue(db: Database) throws {
         let start = Date.now
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) initializeUploadQueue begin")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) initializeUploadQueue begin")
 
         let tables: [any (Syncable & SyncQueryable).Type] = [
             CloudModel.self,
@@ -400,7 +401,7 @@ struct MigrationV1ToV2: DBMigration {
         }
 
         let elapsed = Date.now.timeIntervalSince(start) * 1000.0
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) initializeUploadQueue end elapsed \(Int(elapsed), privacy: .public)ms")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) initializeUploadQueue end elapsed \(Int(elapsed))ms")
     }
 
     private func initializeMigrationUploadQueue<T: Syncable & SyncQueryable>(table _: T.Type, db: Database, startId: Int64) throws -> Int64 {
@@ -452,7 +453,7 @@ struct MigrationV1ToV2: DBMigration {
                 try handle.insert(queues, intoTable: UploadQueue.tableName)
                 lastInsertedRowID = handle.lastInsertedRowID
 
-                Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) firstMigrationUploadQueue \(T.tableName, privacy: .public)  -> batch \(queues.count, privacy: .public)")
+                Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) firstMigrationUploadQueue \(T.tableName)  -> batch \(queues.count)")
 
                 if objects.count < batchSize {
                     finish = true
@@ -475,7 +476,7 @@ struct MigrationV2ToV3: DBMigration {
 
     func migrate(db: Database) throws {
         let start = Date.now
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) begin")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) begin")
         // 增加了字段
         try db.create(table: Message.tableName, of: Message.self)
 
@@ -485,7 +486,7 @@ struct MigrationV2ToV3: DBMigration {
         try db.exec(StatementPragma().pragma(.userVersion).to(toVersion.rawValue))
 
         let elapsed = Date.now.timeIntervalSince(start) * 1000.0
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end elapsed \(Int(elapsed), privacy: .public)ms")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end elapsed \(Int(elapsed))ms")
     }
 }
 
@@ -496,7 +497,7 @@ struct MigrationV3ToV4: DBMigration {
 
     func migrate(db: Database) throws {
         let start = Date.now
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) begin")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) begin")
 
         // Add bodyFields column to CloudModel table
         try db.create(table: CloudModel.tableName, of: CloudModel.self)
@@ -504,6 +505,6 @@ struct MigrationV3ToV4: DBMigration {
         try db.exec(StatementPragma().pragma(.userVersion).to(toVersion.rawValue))
 
         let elapsed = Date.now.timeIntervalSince(start) * 1000.0
-        Logger.database.info("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end elapsed \(Int(elapsed), privacy: .public)ms")
+        Logger.database.infoFile("[*] migrate version \(fromVersion.rawValue) -> \(toVersion.rawValue) end elapsed \(Int(elapsed))ms")
     }
 }

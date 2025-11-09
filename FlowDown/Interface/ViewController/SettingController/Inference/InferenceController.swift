@@ -128,7 +128,7 @@ extension SettingController.SettingContent {
             ) { $0.top /= 2 }
             stackView.addArrangedSubview(SeparatorView())
 
-            defer { updateDefaultModelInfo() }
+            defer { updateDefaultModelinfoFile() }
 
             stackView.addArrangedSubviewWithMargin(
                 ConfigurableSectionHeaderView().with(
@@ -202,10 +202,10 @@ extension SettingController.SettingContent {
 
         override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
-            updateDefaultModelInfo()
+            updateDefaultModelinfoFile()
         }
 
-        func updateDefaultModelInfo() {
+        func updateDefaultModelinfoFile() {
             ModelManager.shared.checkDefaultModels()
 
             let defConvId = ModelManager.ModelIdentifier.defaultModelForConversation
@@ -223,7 +223,7 @@ extension SettingController.SettingContent {
                         allowSelectionWithNone: true
                     ) { [weak self] identifier in
                         ModelManager.ModelIdentifier.defaultModelForConversation = identifier
-                        self?.updateDefaultModelInfo()
+                        self?.updateDefaultModelinfoFile()
                     }
                 }
                 handledConvModel = true
@@ -243,7 +243,7 @@ extension SettingController.SettingContent {
                         allowSelectionWithNone: true
                     ) { [weak self] identifier in
                         ModelManager.ModelIdentifier.defaultModelForConversation = identifier
-                        self?.updateDefaultModelInfo()
+                        self?.updateDefaultModelinfoFile()
                     }
                 }
             }
@@ -285,7 +285,7 @@ extension SettingController.SettingContent {
                     allowSelectionWithNone: true
                 ) { [weak self] identifier in
                     ModelManager.ModelIdentifier.defaultModelForAuxiliaryTask = identifier
-                    self?.updateDefaultModelInfo()
+                    self?.updateDefaultModelinfoFile()
                 }
             }
 
@@ -299,7 +299,7 @@ extension SettingController.SettingContent {
 
             defaultAuxiliaryModelAlignWithChatModel.onUpdated = { [weak self] value in
                 ModelManager.ModelIdentifier.defaultModelForAuxiliaryTaskWillUseCurrentChatModel = value
-                self?.updateDefaultModelInfo()
+                self?.updateDefaultModelinfoFile()
             }
 
             let devAuxVisualId = ModelManager.ModelIdentifier.defaultModelForAuxiliaryVisualTask
@@ -319,7 +319,7 @@ extension SettingController.SettingContent {
                     allowSelectionWithNone: true
                 ) { [weak self] identifier in
                     ModelManager.ModelIdentifier.defaultModelForAuxiliaryVisualTask = identifier
-                    self?.updateDefaultModelInfo()
+                    self?.updateDefaultModelinfoFile()
                 }
             }
         }

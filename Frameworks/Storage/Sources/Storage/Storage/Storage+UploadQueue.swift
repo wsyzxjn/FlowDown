@@ -463,7 +463,7 @@ package extension Storage {
             }
             return objects
         } catch {
-            Logger.database.error("query pending upload error: \(error)")
+            Logger.database.errorFile("query pending upload error: \(error)")
             return []
         }
     }
@@ -542,7 +542,7 @@ package extension Storage {
     /// 初始化上传队列，通常只在app升级数据迁移或者导入数据库需要执行
     func reinitializeUploadQueue() throws {
         let start = Date.now
-        Logger.database.info("[*] reinitializeUploadQueue begin")
+        Logger.database.infoFile("[*] reinitializeUploadQueue begin")
 
         try db.run(transaction: { [weak self] in
             guard let self else { return }
@@ -567,7 +567,7 @@ package extension Storage {
         })
 
         let elapsed = Date.now.timeIntervalSince(start) * 1000.0
-        Logger.database.info("[*] reinitializeUploadQueue end elapsed \(Int(elapsed), privacy: .public)ms")
+        Logger.database.infoFile("[*] reinitializeUploadQueue end elapsed \(Int(elapsed))ms")
     }
 
     private func initializeMigrationUploadQueue<T: Syncable & SyncQueryable>(table _: T.Type, handle: Handle, startId: Int64) throws -> Int64 {
@@ -616,7 +616,7 @@ package extension Storage {
             try handle.insert(queues, intoTable: UploadQueue.tableName)
             lastInsertedRowID = handle.lastInsertedRowID
 
-            Logger.database.info("[*] firstMigrationUploadQueue \(T.tableName, privacy: .public)  -> batch \(queues.count, privacy: .public)")
+            Logger.database.infoFile("[*] firstMigrationUploadQueue \(T.tableName)  -> batch \(queues.count)")
             if objects.count < batchSize {
                 break
             }

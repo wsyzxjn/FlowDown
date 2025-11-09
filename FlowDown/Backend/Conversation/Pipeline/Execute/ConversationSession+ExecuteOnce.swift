@@ -63,7 +63,7 @@ extension ConversationSession {
         }
 
         if !message.document.isEmpty {
-            logger.info("\(message.document)")
+            logger.infoFile("\(message.document)")
             let document = fixWebReferenceIfPossible(in: message.document, with: linkedContents.mapValues(\.absoluteString))
             message.update(\.document, to: document)
         }

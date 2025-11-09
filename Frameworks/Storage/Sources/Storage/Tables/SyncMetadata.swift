@@ -31,7 +31,7 @@ package final class SyncMetadata: Identifiable, Codable, TableNamed, TableCodabl
                 return record
             } catch {
                 // swiftformat:disable:next redundantSelf
-                Logger.database.error("lastKnownRecordData unarchiver error zoneName:\(self.zoneName) ownerName:\(self.ownerName) recordName:\(self.recordName) \(error)")
+                Logger.database.errorFile("lastKnownRecordData unarchiver error zoneName:\(self.zoneName) ownerName:\(self.ownerName) recordName:\(self.recordName) \(error)")
                 return nil
             }
         }

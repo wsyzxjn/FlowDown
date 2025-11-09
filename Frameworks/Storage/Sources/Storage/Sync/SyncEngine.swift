@@ -282,12 +282,12 @@ public extension SyncEngine {
             )
         }
 
-        Logger.syncEngine.info("StopSyncIfNeeded")
+        Logger.syncEngine.infoFile("StopSyncIfNeeded")
     }
 
     /// 恢复同步
     func resumeSyncIfNeeded() async throws {
-        Logger.syncEngine.info("ResumeSyncIfNeeded")
+        Logger.syncEngine.infoFile("ResumeSyncIfNeeded")
         try await fetchChanges()
     }
 
@@ -304,7 +304,7 @@ public extension SyncEngine {
             initializeSyncEngine()
             needDelay = true
         }
-        Logger.syncEngine.info("FetchChanges")
+        Logger.syncEngine.infoFile("FetchChanges")
         if needDelay {
             try await Task.sleep(nanoseconds: 1_000_000_000)
         }
@@ -319,7 +319,7 @@ public extension SyncEngine {
             initializeSyncEngine()
             needDelay = true
         }
-        Logger.syncEngine.info("SendChanges")
+        Logger.syncEngine.infoFile("SendChanges")
         if needDelay {
             try await Task.sleep(nanoseconds: 1_000_000_000)
         }
@@ -328,7 +328,7 @@ public extension SyncEngine {
 
     /// 删除本地数据
     func deleteLocalData() async throws {
-        Logger.syncEngine.info("Deleting local data")
+        Logger.syncEngine.infoFile("Deleting local data")
 
         try storage.clearLocalData()
 
@@ -353,7 +353,7 @@ public extension SyncEngine {
             needDelay = true
         }
 
-        Logger.syncEngine.info("Deleting server data")
+        Logger.syncEngine.infoFile("Deleting server data")
         if needDelay {
             try await Task.sleep(nanoseconds: 1_000_000_000)
         }
@@ -363,7 +363,7 @@ public extension SyncEngine {
 
     /// 强制重新从云端获取
     func reloadDataForcefully() async throws {
-        Logger.syncEngine.info("Reload data force fully")
+        Logger.syncEngine.infoFile("Reload data force fully")
         if let _syncEngine {
             await _syncEngine.cancelOperations()
         }
@@ -378,7 +378,7 @@ private extension SyncEngine {
     func initializeSyncEngine() {
         let syncEngine = createSyncEngine(self)
         _syncEngine = syncEngine
-        Logger.syncEngine.info("Initialized sync engine: \(syncEngine.description)")
+        Logger.syncEngine.infoFile("Initialized sync engine: \(syncEngine.description)")
     }
 
     /// 创建CKRecordZone
@@ -389,7 +389,7 @@ private extension SyncEngine {
         do {
             let existingZones = try await container.privateCloudDatabase.allRecordZones()
             if existingZones.contains(where: { $0.zoneID == SyncEngine.zoneID }) {
-                Logger.syncEngine.info("Zone already exists")
+                Logger.syncEngine.infoFile("Zone already exists")
             } else {
                 let zone = CKRecordZone(zoneID: SyncEngine.zoneID)
                 syncEngine.state.add(pendingDatabaseChanges: [.saveZone(zone)])
@@ -398,7 +398,7 @@ private extension SyncEngine {
                 }
             }
         } catch {
-            Logger.syncEngine.fault("Failed to createCustomZoneIfNeeded: \(error, privacy: .public)")
+            Logger.syncEngine.fault("Failed to createCustomZoneIfNeeded: \(error)")
         }
     }
 
@@ -437,7 +437,7 @@ private extension SyncEngine {
         let batchSize = 100
         let objects = storage.pendingUploadList(tables: tables, batchSize: batchSize)
 
-        Logger.syncEngine.info("ScheduleUpload \(objects.count, privacy: .public)")
+        Logger.syncEngine.infoFile("ScheduleUpload \(objects.count)")
         guard !objects.isEmpty else {
             return
         }
@@ -480,7 +480,7 @@ private extension SyncEngine {
         sendingChangesCount += 1
         if sendingChangesCount == 1, fetchingChangesCount == 0 {
             beginSyncDate = .now
-            Logger.syncEngine.info("Begin synchronization")
+            Logger.syncEngine.infoFile("Begin synchronization")
             await MainActor.run {
                 SyncEngine.isSynchronizing = true
                 NotificationCenter.default.post(
@@ -501,7 +501,7 @@ private extension SyncEngine {
             let nowDate = Date.now
             let elapsed = nowDate.timeIntervalSince(beginSyncDate) * 1000.0
             // swiftformat:disable:next redundantSelf
-            Logger.syncEngine.info("Finish synchronization beging \(self.beginSyncDate, privacy: .public) elapsed \(Int(elapsed), privacy: .public)ms")
+            Logger.syncEngine.infoFile("Finish synchronization beging \(self.beginSyncDate) elapsed \(Int(elapsed))ms")
             await MainActor.run {
                 SyncEngine.LastSyncDate = nowDate
                 SyncEngine.isSynchronizing = false
@@ -520,7 +520,7 @@ private extension SyncEngine {
         fetchingChangesCount += 1
         if fetchingChangesCount == 1, sendingChangesCount == 0 {
             beginSyncDate = .now
-            Logger.syncEngine.info("Begin synchronization")
+            Logger.syncEngine.infoFile("Begin synchronization")
             await MainActor.run {
                 SyncEngine.isSynchronizing = true
                 NotificationCenter.default.post(
@@ -541,7 +541,7 @@ private extension SyncEngine {
             let nowDate = Date.now
             let elapsed = nowDate.timeIntervalSince(beginSyncDate) * 1000.0
             // swiftformat:disable:next redundantSelf
-            Logger.syncEngine.info("Finish synchronization beging \(self.beginSyncDate, privacy: .public) elapsed \(Int(elapsed), privacy: .public)ms")
+            Logger.syncEngine.infoFile("Finish synchronization beging \(self.beginSyncDate) elapsed \(Int(elapsed))ms")
             await MainActor.run {
                 SyncEngine.LastSyncDate = nowDate
                 SyncEngine.isSynchronizing = false
@@ -569,22 +569,22 @@ private extension SyncEngine {
 
         switch changeType {
         case .signIn:
-            Logger.syncEngine.info("HandleAccountChange signIn")
+            Logger.syncEngine.infoFile("HandleAccountChange signIn")
             shouldDeleteLocalData = false
             shouldReUploadLocalData = true
 
         case .switchAccounts:
-            Logger.syncEngine.info("HandleAccountChange switchAccounts")
+            Logger.syncEngine.infoFile("HandleAccountChange switchAccounts")
             shouldDeleteLocalData = true
             shouldReUploadLocalData = false
 
         case .signOut:
-            Logger.syncEngine.info("HandleAccountChange signOut")
+            Logger.syncEngine.infoFile("HandleAccountChange signOut")
             shouldDeleteLocalData = true
             shouldReUploadLocalData = false
 
         @unknown default:
-            Logger.syncEngine.info("Unknown account change")
+            Logger.syncEngine.infoFile("Unknown account change")
             shouldDeleteLocalData = false
             shouldReUploadLocalData = false
         }
@@ -610,16 +610,16 @@ private extension SyncEngine {
         deletions: [(zoneID: CKRecordZone.ID, reason: CKDatabase.DatabaseChange.Deletion.Reason)],
         syncEngine _: any SyncEngineProtocol
     ) async {
-        Logger.syncEngine.info("Received DatabaseChanges modifications: \(modifications.count, privacy: .public) deletions: \(deletions.count, privacy: .public)")
+        Logger.syncEngine.infoFile("Received DatabaseChanges modifications: \(modifications.count) deletions: \(deletions.count)")
 
         var resetLocalData = false
         for deletion in deletions {
             switch deletion.zoneID.zoneName {
             case SyncEngine.zoneID.zoneName:
                 resetLocalData = true
-                Logger.syncEngine.info("Received deletion zone \(deletion.zoneID)")
+                Logger.syncEngine.infoFile("Received deletion zone \(deletion.zoneID)")
             default:
-                Logger.syncEngine.info("Received deletion for unknown zone: \(deletion.zoneID)")
+                Logger.syncEngine.infoFile("Received deletion for unknown zone: \(deletion.zoneID)")
             }
         }
 
@@ -634,7 +634,7 @@ private extension SyncEngine {
         deletions: [(recordID: CKRecord.ID, recordType: CKRecord.RecordType)] = [],
         syncEngine _: any SyncEngineProtocol
     ) async {
-        Logger.syncEngine.info("Received RecordZoneChanges modifications: \(modifications.count, privacy: .public) deletions: \(deletions.count, privacy: .public)")
+        Logger.syncEngine.infoFile("Received RecordZoneChanges modifications: \(modifications.count) deletions: \(deletions.count)")
 
         // Filter by user group preferences
         let filteredModifications = modifications.filter { record in
@@ -645,7 +645,7 @@ private extension SyncEngine {
         do {
             try storage.handleRemoteUpsert(modifications: filteredModifications)
         } catch {
-            Logger.syncEngine.error("HandleRemoteUpsert error \(error, privacy: .public)")
+            Logger.syncEngine.errorFile("HandleRemoteUpsert error \(error)")
         }
 
         let filteredDeletions = deletions.filter { deletion in
@@ -656,7 +656,7 @@ private extension SyncEngine {
         do {
             try storage.handleRemoteDeleted(deletions: filteredDeletions)
         } catch {
-            Logger.syncEngine.error("HandleRemoteDeleted error \(error, privacy: .public)")
+            Logger.syncEngine.errorFile("HandleRemoteDeleted error \(error)")
         }
 
         // 收集变化
@@ -780,15 +780,15 @@ private extension SyncEngine {
         syncEngine _: any SyncEngineProtocol
     ) async {
         for savedRecordZone in savedRecordZones {
-            Logger.syncEngine.info("SavedRecordZone: \(savedRecordZone.zoneID, privacy: .public)")
+            Logger.syncEngine.infoFile("SavedRecordZone: \(savedRecordZone.zoneID)")
         }
 
         for (zoneId, error) in failedRecordZoneSaves {
-            Logger.syncEngine.error("FailedRecordZoneSave: \(zoneId, privacy: .public) \(error, privacy: .public)")
+            Logger.syncEngine.errorFile("FailedRecordZoneSave: \(zoneId) \(error)")
         }
 
         for deletedRecordZoneId in deletedRecordZoneIDs {
-            Logger.syncEngine.info("DeletedRecordZone: \(deletedRecordZoneId, privacy: .public)")
+            Logger.syncEngine.infoFile("DeletedRecordZone: \(deletedRecordZoneId)")
             if deletedRecordZoneId == SyncEngine.zoneID {
                 // 云端删除zone成功后，需要将本地保存的云端记录元数据删除
 //                try? storage.syncMetadataRemoveAll()
@@ -806,7 +806,7 @@ private extension SyncEngine {
         }
 
         for (zoneId, error) in failedRecordZoneDeletes {
-            Logger.syncEngine.error("failedRecordZoneDelete: \(zoneId, privacy: .public) \(error, privacy: .public)")
+            Logger.syncEngine.errorFile("failedRecordZoneDelete: \(zoneId) \(error)")
             if zoneId == SyncEngine.zoneID {
                 await MainActor.run {
                     NotificationCenter.default.post(
@@ -845,7 +845,7 @@ private extension SyncEngine {
                 savedRecord.clearTemporaryAssets(prefix: SyncEngine.temporaryAssetStorage)
             }
 
-            Logger.syncEngine.info("Sent save success record zone: \(savedLocalQueueIds, privacy: .public)")
+            Logger.syncEngine.infoFile("Sent save success record zone: \(savedLocalQueueIds)")
             try? storage.runTransaction {
                 try self.storage.syncMetadataUpdate(metadatas, handle: $0)
                 try self.storage.pendingUploadDequeue(by: savedLocalQueueIds, handle: $0)
@@ -867,7 +867,7 @@ private extension SyncEngine {
                 guard let sentQueueId = failedRecord.sentQueueId, let (localQueueId, _, _) = SyncEngine.parseCKRecordSentQueueId(sentQueueId) else { continue }
 
                 guard let serverRecord = failedRecordSave.error.serverRecord else {
-                    Logger.syncEngine.error("No server record for conflict \(failedRecordSave.error, privacy: .public)")
+                    Logger.syncEngine.errorFile("No server record for conflict \(failedRecordSave.error)")
 
                     pendingUploadChangeStates.append((localQueueId, .failed))
                     continue
@@ -878,7 +878,7 @@ private extension SyncEngine {
                 pendingUploadChangeStates.append((localQueueId, .pending))
 
             case .zoneNotFound:
-                Logger.syncEngine.error("zoneNotFound error saving \(failedRecord.recordID, privacy: .public): \(failedRecordSave.error, privacy: .public)")
+                Logger.syncEngine.errorFile("zoneNotFound error saving \(failedRecord.recordID): \(failedRecordSave.error)")
                 let zone = CKRecordZone(zoneID: failedRecord.recordID.zoneID)
                 if failedRecordSave.error.userInfo[CKErrorUserDidResetEncryptedDataKey] != nil {
                     // CloudKit is unable to decrypt previously encrypted data. This occurs when a user
@@ -896,7 +896,7 @@ private extension SyncEngine {
                 pendingUploadChangeStates.append((localQueueId, .pending))
 
             case .unknownItem:
-                Logger.syncEngine.error("unknownItem error saving \(failedRecord.recordID, privacy: .public): \(failedRecordSave.error, privacy: .public)")
+                Logger.syncEngine.errorFile("unknownItem error saving \(failedRecord.recordID): \(failedRecordSave.error)")
                 // 删除本地记录的云端记录
                 let recordID = failedRecord.recordID
                 let zoneID = recordID.zoneID
@@ -910,14 +910,14 @@ private extension SyncEngine {
             case .networkFailure, .networkUnavailable, .zoneBusy, .serviceUnavailable, .notAuthenticated, .operationCancelled:
                 // 可重试错误也直接从state中删除，由后续的调度策略再次自动加入
                 removePendingRecordZoneChanges.append(.saveRecord(failedRecord.recordID))
-                Logger.syncEngine.error("Retryable error saving \(failedRecord.recordID, privacy: .public): \(failedRecordSave.error, privacy: .public)")
+                Logger.syncEngine.errorFile("Retryable error saving \(failedRecord.recordID): \(failedRecordSave.error)")
 
                 guard let sentQueueId = failedRecord.sentQueueId, let (localQueueId, _, _) = SyncEngine.parseCKRecordSentQueueId(sentQueueId) else { continue }
                 pendingUploadChangeStates.append((localQueueId, .pending))
 
             default:
                 removePendingRecordZoneChanges.append(.saveRecord(failedRecord.recordID))
-                Logger.syncEngine.fault("Unknown error saving record \(failedRecord.recordID, privacy: .public): \(failedRecordSave.error, privacy: .public)")
+                Logger.syncEngine.fault("Unknown error saving record \(failedRecord.recordID): \(failedRecordSave.error)")
 
                 guard let sentQueueId = failedRecord.sentQueueId, let (localQueueId, _, _) = SyncEngine.parseCKRecordSentQueueId(sentQueueId) else { continue }
                 pendingUploadChangeStates.append((localQueueId, .failed))
@@ -932,17 +932,17 @@ private extension SyncEngine {
             switch error.code {
             case .networkFailure, .networkUnavailable, .zoneBusy, .serviceUnavailable, .notAuthenticated, .operationCancelled:
                 // There are several errors that the sync engine will automatically retry, let's just log and move on.
-                Logger.database.error("Retryable error deleting \(recordID, privacy: .public): \(error, privacy: .public)")
+                Logger.database.errorFile("Retryable error deleting \(recordID): \(error)")
 
             default:
                 finalDeletedRecordIDs.append(recordID)
-                Logger.syncEngine.fault("Unknown error deleting record \(recordID, privacy: .public): \(error, privacy: .public)")
+                Logger.syncEngine.fault("Unknown error deleting record \(recordID): \(error)")
             }
         }
 
         if !finalDeletedRecordIDs.isEmpty {
             let deletedQueueObjectIds = deletedRecordIDs.compactMap { UploadQueue.parseCKRecordID($0.recordName) }
-            Logger.syncEngine.debug("Sent deleted success record zone: \(deletedQueueObjectIds, privacy: .public)")
+            Logger.syncEngine.debugFile("Sent deleted success record zone: \(deletedQueueObjectIds)")
             try? storage.pendingUploadDequeueDeleted(by: deletedQueueObjectIds)
         }
 
@@ -991,7 +991,7 @@ private extension UploadQueue {
         let payload = try? realObject.encodePayload()
 
         #if DEBUG
-            Logger.syncEngine.debug("populateRecord \(record.recordID, privacy: .public) payload \(UploadQueue.formatter.string(fromByteCount: Int64(payload?.count ?? 0)), privacy: .public)")
+            Logger.syncEngine.debugFile("populateRecord \(record.recordID) payload \(UploadQueue.formatter.string(fromByteCount: Int64(payload?.count ?? 0)))")
         #endif
 
         guard let payload else {
@@ -1036,7 +1036,7 @@ extension SyncEngine: CKSyncEngineDelegate {
 
     public func nextFetchChangesOptions(_ context: CKSyncEngine.FetchChangesContext, syncEngine _: CKSyncEngine) async -> CKSyncEngine.FetchChangesOptions {
         let options = context.options
-        Logger.syncEngine.info("Next fetch by reason: \(context.reason, privacy: .public)")
+        Logger.syncEngine.infoFile("Next fetch by reason: \(context.reason)")
         return options
     }
 }
@@ -1045,7 +1045,7 @@ extension SyncEngine: CKSyncEngineDelegate {
 
 extension SyncEngine: SyncEngineDelegate {
     package func handleEvent(_ event: SyncEngine.Event, syncEngine _: any SyncEngineProtocol) async {
-        Logger.syncEngine.info("Handling event \(event, privacy: .public)")
+        Logger.syncEngine.infoFile("Handling event \(event)")
 
         switch event {
         case let .accountChange(changeType):
@@ -1128,7 +1128,7 @@ extension SyncEngine: SyncEngineDelegate {
         options: CKSyncEngine.SendChangesOptions,
         syncEngine: any SyncEngineProtocol
     ) async -> CKSyncEngine.RecordZoneChangeBatch? {
-        Logger.syncEngine.info("Next push by reason: \(reason, privacy: .public)")
+        Logger.syncEngine.infoFile("Next push by reason: \(reason)")
 
         let scope = options.scope
         let changes = syncEngine.state.pendingRecordZoneChanges.filter { scope.contains($0) }
@@ -1176,7 +1176,7 @@ extension SyncEngine: SyncEngineDelegate {
                 .saveRecord($0.recordId)
             }
 
-            Logger.syncEngine.info("Removing \(staleChanges.count, privacy: .public) missing UploadQueue pending changes")
+            Logger.syncEngine.infoFile("Removing \(staleChanges.count) missing UploadQueue pending changes")
             syncEngine.state.remove(pendingRecordZoneChanges: staleChanges)
         }
 
@@ -1211,7 +1211,7 @@ extension SyncEngine: SyncEngineDelegate {
 
         /// ✅ Step 3: 从 SyncEngine state 移除旧的 PendingChanges
         if !staleRecordChanges.isEmpty {
-            Logger.syncEngine.info("Removing \(staleRecordChanges.count, privacy: .public) stale old record changes")
+            Logger.syncEngine.infoFile("Removing \(staleRecordChanges.count) stale old record changes")
             syncEngine.state.remove(pendingRecordZoneChanges: staleRecordChanges)
         }
 
@@ -1235,7 +1235,7 @@ extension SyncEngine: SyncEngineDelegate {
                 try object.populateRecord(record)
                 recordsToSave.append(record)
             } catch {
-                Logger.syncEngine.error("populateRecord error \(error, privacy: .public)")
+                Logger.syncEngine.errorFile("populateRecord error \(error)")
                 syncEngine.state.remove(pendingRecordZoneChanges: [.saveRecord(recordID)])
             }
         }
@@ -1248,7 +1248,7 @@ extension SyncEngine: SyncEngineDelegate {
             return nil
         }
 
-        Logger.syncEngine.info("Push batch modifications \(recordsToSave.count, privacy: .public) deletions \(realRecordIDsToDelete.count, privacy: .public)")
+        Logger.syncEngine.infoFile("Push batch modifications \(recordsToSave.count) deletions \(realRecordIDsToDelete.count)")
         let batch = CKSyncEngine.RecordZoneChangeBatch(recordsToSave: recordsToSave, recordIDsToDelete: realRecordIDsToDelete, atomicByZone: true)
         return batch
     }
@@ -1258,7 +1258,7 @@ extension SyncEngine: SyncEngineDelegate {
         options _: CKSyncEngine.FetchChangesOptions,
         syncEngine _: any SyncEngineProtocol
     ) async -> CKSyncEngine.FetchChangesOptions {
-        Logger.syncEngine.info("Next fetch by reason: \(reason, privacy: .public)")
+        Logger.syncEngine.infoFile("Next fetch by reason: \(reason)")
         let options = CKSyncEngine.FetchChangesOptions()
         return options
     }
