@@ -51,8 +51,11 @@ extension ConversationSession {
                 requestMessages.append(.assistant(content: .text(message.document)))
             case .webSearch:
                 let result = message.webSearchStatus.searchResults
+                var index = 0
                 let content = result.compactMap {
-                    """
+                    index += 1
+                    return """
+                    <index>\(index)</index>
                     <title>\($0.title)</title>
                     <url>\($0.url.absoluteString)</url>
                     <content>\($0.toolResult)</content>
