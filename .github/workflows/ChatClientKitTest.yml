@@ -1,0 +1,69 @@
+name: ChatClientKit Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "Frameworks/ChatClientKit/**"
+      - ".github/workflows/ChatClientKitTest.yml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "Frameworks/ChatClientKit/**"
+      - ".github/workflows/ChatClientKitTest.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chatclientkit-tests:
+    name: ChatClientKit Swift Tests
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 26.0
+        run: sudo xcode-select -s /Applications/Xcode_26.0.app/Contents/Developer
+
+      - name: Ensure OpenRouter API key is configured
+        shell: bash
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -z "${OPENROUTER_API_KEY}" ]; then
+            echo "::error::OPENROUTER_API_KEY secret is not configured. Add it under repository secrets to run ChatClientKit integration tests."
+            exit 1
+          fi
+
+      - name: Clone Gemma 3 1B QAT model
+        shell: bash
+        run: |
+          set -eo pipefail
+          git lfs install
+          MODEL_ROOT="${HOME}/mlx_models"
+          MODEL_DIR="${MODEL_ROOT}/gemma-3-1b-it-qat-4bit"
+          mkdir -p "${MODEL_ROOT}"
+          if [ ! -d "${MODEL_DIR}/.git" ]; then
+            git clone https://huggingface.co/mlx-community/gemma-3-1b-it-qat-4bit "${MODEL_DIR}"
+          else
+            git -C "${MODEL_DIR}" pull --ff-only
+          fi
+
+      - name: Resolve Swift package dependencies
+        shell: bash
+        run: |
+          set -eo pipefail
+          swift package resolve
+        working-directory: Frameworks/ChatClientKit
+
+      - name: Run ChatClientKit test suite
+        shell: bash
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          set -eo pipefail
+          swift test --package-path Frameworks/ChatClientKit --configuration debug
+
