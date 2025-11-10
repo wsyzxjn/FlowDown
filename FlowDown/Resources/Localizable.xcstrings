@@ -5859,23 +5859,6 @@
         }
       }
     },
-    "Failed to load model: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to load model: %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法加载模型：%@"
-          }
-        }
-      }
-    },
     "Failed to load models" : {
       "localizations" : {
         "en" : {
@@ -14718,23 +14701,6 @@
         }
       }
     },
-    "Unable to decode configuration." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to decode configuration."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法解析模型配置。"
-          }
-        }
-      }
-    },
     "Unable to decode image." : {
       "localizations" : {
         "en" : {
@@ -15195,57 +15161,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "不支持的格式。"
-          }
-        }
-      }
-    },
-    "Unsupported model type." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unsupported model type."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "不支持的模型类型。"
-          }
-        }
-      }
-    },
-    "Unsupported processor type." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unsupported processor type."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "处理器不受支持。"
-          }
-        }
-      }
-    },
-    "Unsupported." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unsupported."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "不受支持。"
           }
         }
       }
