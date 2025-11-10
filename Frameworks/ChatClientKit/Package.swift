@@ -6,6 +6,7 @@ let package = Package(
     name: "ChatClientKit",
     defaultLocalization: "en",
     platforms: [
+        .macOS(.v14),
         .iOS(.v17),
         .macCatalyst(.v17),
     ],
@@ -34,5 +35,9 @@ let package = Package(
         .target(name: "ServerEvent", dependencies: [
             .product(name: "Logger", package: "Logger"),
         ]),
+        .testTarget(
+            name: "ChatClientKitTests",
+            dependencies: ["ChatClientKit"]
+        ),
     ]
 )

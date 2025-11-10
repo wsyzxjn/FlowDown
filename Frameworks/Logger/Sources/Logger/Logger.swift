@@ -9,7 +9,12 @@
 @_exported import OSLog
 
 public extension Logger {
-    static let loggingSubsystem: String = Bundle.main.bundleIdentifier!
+    static let loggingSubsystem: String = {
+        if let identifier = Bundle.main.bundleIdentifier, !identifier.isEmpty {
+            return identifier
+        }
+        return ProcessInfo.processInfo.processName
+    }()
 
     static let database = Logger(subsystem: Self.loggingSubsystem, category: "Database")
     static let syncEngine = Logger(subsystem: Self.loggingSubsystem, category: "SyncEngine")

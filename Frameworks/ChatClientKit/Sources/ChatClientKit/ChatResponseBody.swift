@@ -145,7 +145,7 @@ public struct Function: Decodable {
         if let argumentsRaw = try? container.decode(String.self, forKey: .arguments) {
             self.argumentsRaw = argumentsRaw
             let data = argumentsRaw.data(using: .utf8)!
-            arguments = try (JSONDecoder().decode([String: JSONValue].self, from: data)).untypedDictionary
+            arguments = try (JSONDecoder().decode([String: AnyCodingValue].self, from: data)).untypedDictionary
         } else {
             argumentsRaw = nil
             arguments = nil

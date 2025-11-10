@@ -5,14 +5,14 @@
 
 import Foundation
 
-public enum JSONValue: Sendable, Codable {
+public enum AnyCodingValue: Sendable, Codable {
     case null(NSNull)
     case bool(Bool)
     case int(Int)
     case double(Double)
     case string(String)
-    case array([JSONValue])
-    case object([String: JSONValue])
+    case array([AnyCodingValue])
+    case object([String: AnyCodingValue])
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
@@ -46,9 +46,9 @@ public enum JSONValue: Sendable, Codable {
             self = .double(double)
         } else if let string = try? container.decode(String.self) {
             self = .string(string)
-        } else if let array = try? container.decode([JSONValue].self) {
+        } else if let array = try? container.decode([AnyCodingValue].self) {
             self = .array(array)
-        } else if let object = try? container.decode([String: JSONValue].self) {
+        } else if let object = try? container.decode([String: AnyCodingValue].self) {
             self = .object(object)
         } else {
             throw DecodingError.dataCorruptedError(
@@ -59,13 +59,13 @@ public enum JSONValue: Sendable, Codable {
     }
 }
 
-public extension [String: JSONValue] {
+public extension [String: AnyCodingValue] {
     var untypedDictionary: [String: Any] {
         convertToUntypedDictionary(self)
     }
 }
 
-private func convertToUntyped(_ input: JSONValue) -> Any {
+private func convertToUntyped(_ input: AnyCodingValue) -> Any {
     switch input {
     case .null:
         NSNull()
@@ -85,7 +85,7 @@ private func convertToUntyped(_ input: JSONValue) -> Any {
 }
 
 private func convertToUntypedDictionary(
-    _ input: [String: JSONValue]
+    _ input: [String: AnyCodingValue]
 ) -> [String: Any] {
     input.mapValues { v in
         switch v {
@@ -107,44 +107,44 @@ private func convertToUntypedDictionary(
     }
 }
 
-extension JSONValue: ExpressibleByNilLiteral {
+extension AnyCodingValue: ExpressibleByNilLiteral {
     public init(nilLiteral _: ()) {
         self = .null(NSNull())
     }
 }
 
-extension JSONValue: ExpressibleByBooleanLiteral {
+extension AnyCodingValue: ExpressibleByBooleanLiteral {
     public init(booleanLiteral value: BooleanLiteralType) {
         self = .bool(value)
     }
 }
 
-extension JSONValue: ExpressibleByIntegerLiteral {
+extension AnyCodingValue: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: IntegerLiteralType) {
         self = .int(value)
     }
 }
 
-extension JSONValue: ExpressibleByFloatLiteral {
+extension AnyCodingValue: ExpressibleByFloatLiteral {
     public init(floatLiteral value: FloatLiteralType) {
         self = .double(value)
     }
 }
 
-extension JSONValue: ExpressibleByStringLiteral {
+extension AnyCodingValue: ExpressibleByStringLiteral {
     public init(stringLiteral value: StringLiteralType) {
         self = .string(value)
     }
 }
 
-extension JSONValue: ExpressibleByArrayLiteral {
-    public init(arrayLiteral elements: JSONValue...) {
+extension AnyCodingValue: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: AnyCodingValue...) {
         self = .array(elements)
     }
 }
 
-extension JSONValue: ExpressibleByDictionaryLiteral {
-    public init(dictionaryLiteral elements: (String, JSONValue)...) {
+extension AnyCodingValue: ExpressibleByDictionaryLiteral {
+    public init(dictionaryLiteral elements: (String, AnyCodingValue)...) {
         self = .object(.init(uniqueKeysWithValues: elements))
     }
 }

@@ -5,6 +5,7 @@ import PackageDescription
 let package = Package(
     name: "Logger",
     platforms: [
+        .macOS(.v11),
         .iOS(.v17),
         .macCatalyst(.v17),
     ],

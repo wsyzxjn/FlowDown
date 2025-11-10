@@ -478,7 +478,7 @@ public extension ChatRequestBody {
         case function(
             name: String,
             description: String?,
-            parameters: [String: JSONValue]?,
+            parameters: [String: AnyCodingValue]?,
             strict: Bool?
         )
 
