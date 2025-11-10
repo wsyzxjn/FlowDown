@@ -30,8 +30,8 @@ public protocol MLXModelLoading {
 }
 
 public struct DefaultMLXModelLoader: MLXModelLoading {
-    public init() { }
-    
+    public init() {}
+
     public func loadLLM(configuration: ModelConfiguration) async throws -> ModelContainer {
         try await LLMModelFactory.shared.loadContainer(configuration: configuration)
     }
@@ -112,9 +112,9 @@ private extension MLXModelCoordinator {
             task = Task {
                 switch kind {
                 case .llm:
-                    return try await loader.loadLLM(configuration: configuration)
+                    try await loader.loadLLM(configuration: configuration)
                 case .vlm:
-                    return try await loader.loadVLM(configuration: configuration)
+                    try await loader.loadVLM(configuration: configuration)
                 }
             }
         }
@@ -128,4 +128,3 @@ private extension MLXModelCoordinator {
         }
     }
 }
-

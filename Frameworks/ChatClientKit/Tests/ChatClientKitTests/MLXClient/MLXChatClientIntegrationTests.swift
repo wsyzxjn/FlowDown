@@ -23,7 +23,7 @@ struct MLXChatClientIntegrationTests {
             body: .init(
                 messages: [
                     .system(content: .text("Respond succinctly with HELLO.")),
-                    .user(content: .text("Say HELLO"))
+                    .user(content: .text("Say HELLO")),
                 ],
                 maxCompletionTokens: 32,
                 temperature: 0.0
@@ -36,4 +36,3 @@ struct MLXChatClientIntegrationTests {
         #expect(!content.isEmpty)
     }
 }
-

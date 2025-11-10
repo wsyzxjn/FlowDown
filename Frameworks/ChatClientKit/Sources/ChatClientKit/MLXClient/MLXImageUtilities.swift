@@ -97,4 +97,3 @@ enum MLXImageUtilities {
         return normalize(image: cropped)
     }
 }
-

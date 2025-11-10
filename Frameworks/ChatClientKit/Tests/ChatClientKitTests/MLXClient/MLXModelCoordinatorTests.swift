@@ -6,11 +6,11 @@
 //
 
 @testable import ChatClientKit
-import MLX
-import MLXLMCommon
-import MLXLLM
-import MLXVLM
 import Foundation
+import MLX
+import MLXLLM
+import MLXLMCommon
+import MLXVLM
 import Testing
 
 @Suite("MLX Model Coordinator")
@@ -61,5 +61,3 @@ private func modelConfiguration() throws -> ModelConfiguration {
     let url = try #require(TestHelpers.fixtureURL(named: "mlx_testing_model"))
     return ModelConfiguration(directory: url)
 }
-
-
