@@ -37,7 +37,11 @@ extension ModelManager {
             assert(!Thread.isMainThread)
 
             do {
-                let client = MLXChatClient(url: ModelManager.shared.modelContent(for: model))
+                let preferredKind: MLXModelKind = model.capabilities.contains(.visual) ? .vlm : .llm
+                let client = MLXChatClient(
+                    url: ModelManager.shared.modelContent(for: model),
+                    preferredKind: preferredKind
+                )
                 client.collectedErrors = nil
 
                 let userContent: ChatRequestBody.Message.MessageContent<String, [ChatRequestBody.Message.ContentPart]> = {
@@ -259,7 +263,11 @@ extension ModelManager {
                 additionalBodyField: additionalBodyField
             )
         } else if let model = localModel(identifier: identifier) {
-            return MLXChatClient(url: modelContent(for: model))
+            let preferredKind: MLXModelKind = model.capabilities.contains(.visual) ? .vlm : .llm
+            return MLXChatClient(
+                url: modelContent(for: model),
+                preferredKind: preferredKind
+            )
         } else {
             throw NSError(
                 domain: "Model",

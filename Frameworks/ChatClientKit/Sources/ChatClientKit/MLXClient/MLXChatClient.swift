@@ -8,12 +8,12 @@ import Foundation
 @preconcurrency import MLXLMCommon
 
 open class MLXChatClient: ChatService {
-    private let url: URL
     let modelConfiguration: ModelConfiguration
     let emptyImage: CIImage = MLXImageUtilities.placeholderImage(
         size: .init(width: 64, height: 64)
     )
     let coordinator: MLXModelCoordinating
+    let preferredKind: MLXModelKind
 
     // Hex UTF-8 bytes EF BF BD
     static let decoderErrorSuffix = String(data: Data([0xEF, 0xBF, 0xBD]), encoding: .utf8)!
@@ -22,10 +22,11 @@ open class MLXChatClient: ChatService {
 
     public init(
         url: URL,
+        preferredKind: MLXModelKind = .llm,
         coordinator: MLXModelCoordinating = MLXModelCoordinator.shared
     ) {
-        self.url = url
         modelConfiguration = .init(directory: url)
+        self.preferredKind = preferredKind
         self.coordinator = coordinator
     }
 

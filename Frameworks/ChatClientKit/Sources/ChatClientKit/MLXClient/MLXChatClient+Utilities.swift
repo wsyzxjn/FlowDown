@@ -101,13 +101,13 @@ extension MLXChatClient {
     }
 
     func loadContainer(adjusting userInput: inout UserInput) async throws -> ModelContainer {
-        do {
+        switch preferredKind {
+        case .llm:
             let container = try await coordinator.container(for: modelConfiguration, kind: .llm)
             logger.infoFile("successfully loaded LLM model: \(modelConfiguration.name)")
             userInput.images = []
             return container
-        } catch {
-            logger.debugFile("LLM load failed, attempting VLM model: \(error.localizedDescription)")
+        case .vlm:
             let container = try await coordinator.container(for: modelConfiguration, kind: .vlm)
             logger.infoFile("successfully loaded VLM model: \(modelConfiguration.name)")
             if userInput.images.isEmpty { userInput.images.append(.ciImage(emptyImage)) }
