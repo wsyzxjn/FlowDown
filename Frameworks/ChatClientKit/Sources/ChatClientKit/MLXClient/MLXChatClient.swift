@@ -7,7 +7,7 @@ import CoreImage
 import Foundation
 @preconcurrency import MLXLMCommon
 
-final class MLXChatClient: ChatService {
+public final class MLXChatClient: ChatService {
     let modelConfiguration: ModelConfiguration
     let emptyImage: CIImage = MLXImageUtilities.placeholderImage(
         size: .init(width: 64, height: 64)
@@ -18,9 +18,9 @@ final class MLXChatClient: ChatService {
     // Hex UTF-8 bytes EF BF BD
     static let decoderErrorSuffix = String(data: Data([0xEF, 0xBF, 0xBD]), encoding: .utf8)!
 
-    let errorCollector = ChatServiceErrorCollector()
+    public let errorCollector = ChatServiceErrorCollector()
 
-    init(
+    public init(
         url: URL,
         preferredKind: MLXModelKind = .llm,
         coordinator: MLXModelCoordinating = MLXModelCoordinator.shared
@@ -30,7 +30,7 @@ final class MLXChatClient: ChatService {
         self.coordinator = coordinator
     }
 
-    func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
+    public func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
         logger.infoFile("starting non-streaming chat completion request with \(body.messages.count) messages")
         let startTime = Date()
         let resolvedBody = resolve(body: body, stream: false)
@@ -63,7 +63,7 @@ final class MLXChatClient: ChatService {
         )
     }
 
-    func streamingChatCompletionRequest(
+    public func streamingChatCompletionRequest(
         body: ChatRequestBody
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         let resolvedBody = resolve(body: body, stream: true)

@@ -9,25 +9,25 @@
 import Foundation
 import ServerEvent
 
-final class RemoteChatClient: ChatService {
+public final class RemoteChatClient: ChatService {
     /// The ID of the model to use.
     ///
     /// The required section should be in alphabetical order.
-    let model: String
-    let baseURL: String?
-    let path: String?
-    let apiKey: String?
+    public let model: String
+    public let baseURL: String?
+    public let path: String?
+    public let apiKey: String?
 
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case invalidURL
         case invalidApiKey
         case invalidData
     }
 
-    let errorCollector = ChatServiceErrorCollector()
+    public let errorCollector = ChatServiceErrorCollector()
 
-    let additionalHeaders: [String: String]
-    nonisolated(unsafe) let additionalBodyField: [String: Any]
+    public let additionalHeaders: [String: String]
+    public nonisolated(unsafe) let additionalBodyField: [String: Any]
 
     private let session: URLSessioning
     private let eventSourceFactory: EventSourceProducing
@@ -36,7 +36,7 @@ final class RemoteChatClient: ChatService {
     private let errorExtractor: RemoteChatErrorExtractor
     private let reasoningParser: ReasoningContentParser
 
-    convenience init(
+    public convenience init(
         model: String,
         baseURL: String? = nil,
         path: String? = nil,
@@ -55,7 +55,7 @@ final class RemoteChatClient: ChatService {
         )
     }
 
-    init(
+    public init(
         model: String,
         baseURL: String? = nil,
         path: String? = nil,
@@ -78,7 +78,7 @@ final class RemoteChatClient: ChatService {
         reasoningParser = dependencies.reasoningParser
     }
 
-    func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
+    public func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
         logger.infoFile("starting non-streaming request to model: \(model) with \(body.messages.count) messages")
         let startTime = Date()
 
@@ -103,7 +103,7 @@ final class RemoteChatClient: ChatService {
         return response
     }
 
-    func streamingChatCompletionRequest(
+    public func streamingChatCompletionRequest(
         body: ChatRequestBody
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         let requestBody = resolve(body: body, stream: true)
@@ -122,13 +122,13 @@ final class RemoteChatClient: ChatService {
         }
     }
 
-    func chatCompletionRequest(
+    public func chatCompletionRequest(
         _ request: some ChatRequestConvertible
     ) async throws -> ChatResponseBody {
         try await chatCompletionRequest(body: request.asChatRequestBody())
     }
 
-    func streamingChatCompletionRequest(
+    public func streamingChatCompletionRequest(
         _ request: some ChatRequestConvertible
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         try await streamingChatCompletionRequest(body: request.asChatRequestBody())
@@ -145,20 +145,20 @@ final class RemoteChatClient: ChatService {
     ///     }
     /// }
     /// ```
-    func chatCompletion(
+    public func chatCompletion(
         @ChatRequestBuilder _ builder: @Sendable () -> [ChatRequest.BuildComponent]
     ) async throws -> ChatResponseBody {
         try await chatCompletionRequest(ChatRequest(builder))
     }
 
     /// Streams a chat completion using the Swift request DSL.
-    func streamingChatCompletion(
+    public func streamingChatCompletion(
         @ChatRequestBuilder _ builder: @Sendable () -> [ChatRequest.BuildComponent]
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         try await streamingChatCompletionRequest(ChatRequest(builder))
     }
 
-    func makeURLRequest(
+    public func makeURLRequest(
         from request: some ChatRequestConvertible,
         stream: Bool
     ) throws -> URLRequest {
@@ -184,7 +184,6 @@ final class RemoteChatClient: ChatService {
         var requestBody = body
         requestBody.model = model
         requestBody.stream = stream
-        requestBody.streamOptions = stream ? requestBody.streamOptions : nil
         return requestBody
     }
 

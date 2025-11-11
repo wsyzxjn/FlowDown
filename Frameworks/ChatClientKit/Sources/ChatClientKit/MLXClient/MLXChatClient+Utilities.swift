@@ -14,7 +14,6 @@ extension MLXChatClient {
     func resolve(body: ChatRequestBody, stream: Bool) -> ChatRequestBody {
         var body = body
         body.stream = stream
-        body.streamOptions = stream ? body.streamOptions : nil
         return body
     }
 
@@ -90,12 +89,6 @@ extension MLXChatClient {
         var parameters = GenerateParameters()
         if let temperature = body.temperature {
             parameters.temperature = Float(temperature)
-        }
-        if let topP = body.topP {
-            parameters.topP = Float(topP)
-        }
-        if let penalty = body.frequencyPenalty {
-            parameters.repetitionPenalty = Float(penalty)
         }
         return parameters
     }

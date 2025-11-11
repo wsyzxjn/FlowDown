@@ -16,7 +16,6 @@ struct ChatRequestBuilderTests {
         let request = ChatRequest {
             ChatRequest.model(" gpt-test ")
             ChatRequest.temperature(0.4)
-            ChatRequest.stop(" END ", "STOP ")
             ChatRequest.messages {
                 ChatRequest.Message.system(content: .text("  system prompt  "))
                 ChatRequest.Message.user(content: .text(" hello  "))
@@ -28,7 +27,6 @@ struct ChatRequestBuilderTests {
 
         #expect(body.model == "gpt-test")
         #expect(body.temperature == 0.4)
-        #expect(body.stop == ["END", "STOP"])
         #expect(body.messages.count == 3)
 
         if case let .system(content, name) = body.messages[0] {
@@ -65,33 +63,6 @@ struct ChatRequestBuilderTests {
         } else {
             Issue.record("Expected assistant message at index 2")
         }
-    }
-
-    @Test("Cache identifiers are identical for semantically equivalent requests")
-    func cacheIdentifier_equivalentRequests_match() throws {
-        let lhs = ChatRequest {
-            ChatRequest.model("demo")
-            ChatRequest.temperature(0.2)
-            ChatRequest.stop("end")
-            ChatRequest.messages {
-                .user(content: .text("Hi"))
-            }
-        }
-
-        let rhs = ChatRequest {
-            ChatRequest.model(" demo ")
-            ChatRequest.temperature(0.2)
-            ChatRequest.stop(" end ")
-            ChatRequest.messages {
-                .user(content: .text(" Hi "))
-            }
-        }
-
-        #expect(lhs.cacheIdentifier == rhs.cacheIdentifier)
-
-        let lhsData = try lhs.encodedBody()
-        let rhsData = try rhs.encodedBody()
-        #expect(lhsData == rhsData)
     }
 
     @Test("Request builder allows composition via appendMessages")

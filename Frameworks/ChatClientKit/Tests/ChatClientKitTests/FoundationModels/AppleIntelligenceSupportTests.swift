@@ -193,8 +193,7 @@ struct AppleIntelligenceIntegrationTests {
             ],
             maxCompletionTokens: 100,
             temperature: 0.5,
-            tools: tools,
-            toolChoice: .auto
+            tools: tools
         )
 
         let response = try await client.chatCompletionRequest(body: body)

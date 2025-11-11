@@ -30,73 +30,45 @@ public struct ChatRequest: Sendable {
     public typealias MessageContent = ChatRequestBody.Message.MessageContent
     public typealias ContentPart = ChatRequestBody.Message.ContentPart
     public typealias Tool = ChatRequestBody.Tool
-    public typealias ToolChoice = ChatRequestBody.ToolChoice
-    public typealias ResponseFormat = ChatRequestBody.ResponseFormat
-    public typealias StreamOptions = ChatRequestBody.StreamOptions
 
     public var model: String?
     public var messages: [Message]
     public var maxCompletionTokens: Int?
-    public var stop: [String]?
-    public var store: Bool?
     public var stream: Bool?
-    public var streamOptions: StreamOptions?
     public var temperature: Double?
     public var tools: [Tool]?
-    public var toolChoice: ToolChoice?
-    public var user: String?
 
     public init(
         model: String? = nil,
         messages: [Message],
         maxCompletionTokens: Int? = nil,
-        stop: [String]? = nil,
-        store: Bool? = nil,
         stream: Bool? = nil,
-        streamOptions: StreamOptions? = nil,
         temperature: Double? = nil,
-        tools: [Tool]? = nil,
-        toolChoice: ToolChoice? = nil,
-        user: String? = nil
+        tools: [Tool]? = nil
     ) {
         self.model = model
         self.messages = messages
         self.maxCompletionTokens = maxCompletionTokens
-        self.stop = stop
-        self.store = store
         self.stream = stream
-        self.streamOptions = streamOptions
         self.temperature = temperature
         self.tools = tools
-        self.toolChoice = toolChoice
-        self.user = user
     }
 
     public init(
         model: String? = nil,
         maxCompletionTokens: Int? = nil,
-        stop: [String]? = nil,
-        store: Bool? = nil,
         stream: Bool? = nil,
-        streamOptions: StreamOptions? = nil,
         temperature: Double? = nil,
         tools: [Tool]? = nil,
-        toolChoice: ToolChoice? = nil,
-        user: String? = nil,
         @ChatMessageBuilder messages: @Sendable () -> [Message]
     ) {
         self.init(
             model: model,
             messages: messages(),
             maxCompletionTokens: maxCompletionTokens,
-            stop: stop,
-            store: store,
             stream: stream,
-            streamOptions: streamOptions,
             temperature: temperature,
-            tools: tools,
-            toolChoice: toolChoice,
-            user: user
+            tools: tools
         )
     }
 
@@ -110,19 +82,11 @@ extension ChatRequest: ChatRequestConvertible {
         var body = ChatRequestBody(
             messages: Self.normalize(messages),
             maxCompletionTokens: maxCompletionTokens,
-            stop: stop?.map(Self.normalizeStop),
-            store: store,
             stream: stream,
-            streamOptions: streamOptions,
             temperature: temperature,
-            tools: tools.map(Self.normalizeTools),
-            toolChoice: toolChoice.map(Self.normalizeToolChoice),
-            user: Self.trimmed(user)
+            tools: tools.map(Self.normalizeTools)
         )
         body.model = Self.trimmed(model)
-        if body.stream != true {
-            body.streamOptions = nil
-        }
         return body
     }
 }
@@ -246,21 +210,8 @@ private extension ChatRequest {
         return normalized.sorted { $0.id < $1.id }
     }
 
-    static func normalizeStop(_ value: String) -> String {
-        trimmed(value) ?? value
-    }
-
     static func normalizeTools(_ tools: [Tool]) -> [Tool] {
         tools.sorted(by: toolSortKey).map(normalizeTool)
-    }
-
-    static func normalizeToolChoice(_ choice: ToolChoice) -> ToolChoice {
-        switch choice {
-        case .none, .auto, .required:
-            choice
-        case let .specific(functionName):
-            .specific(functionName: trimmed(functionName) ?? functionName)
-        }
     }
 
     static func normalizeTool(_ tool: Tool) -> Tool {

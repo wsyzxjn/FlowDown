@@ -9,7 +9,7 @@ import ChatClientKit
 import Foundation
 import FoundationModels
 import GPTEncoder
-@preconcurrency import MLX
+import MLX
 import Storage
 import UIKit
 

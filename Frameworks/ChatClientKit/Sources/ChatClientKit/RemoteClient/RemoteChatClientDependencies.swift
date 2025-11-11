@@ -38,7 +38,7 @@ private struct DefaultEventStreamTask: EventStreamTask, @unchecked Sendable {
     }
 }
 
-struct RemoteChatClientDependencies: Sendable {
+public struct RemoteChatClientDependencies: Sendable {
     var session: URLSessioning
     var eventSourceFactory: EventSourceProducing
     var responseDecoderFactory: @Sendable () -> JSONDecoding

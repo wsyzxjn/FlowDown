@@ -106,24 +106,8 @@ public extension ChatRequest {
         { $0.maxCompletionTokens = value }
     }
 
-    static func stop(_ values: [String]?) -> BuildComponent {
-        { $0.stop = values }
-    }
-
-    static func stop(_ values: String...) -> BuildComponent {
-        stop(values)
-    }
-
-    static func store(_ value: Bool?) -> BuildComponent {
-        { $0.store = value }
-    }
-
     static func stream(_ value: Bool?) -> BuildComponent {
         { $0.stream = value }
-    }
-
-    static func streamOptions(_ value: StreamOptions?) -> BuildComponent {
-        { $0.streamOptions = value }
     }
 
     static func temperature(_ value: Double?) -> BuildComponent {
@@ -132,14 +116,6 @@ public extension ChatRequest {
 
     static func tools(_ value: [Tool]?) -> BuildComponent {
         { $0.tools = value }
-    }
-
-    static func toolChoice(_ value: ToolChoice?) -> BuildComponent {
-        { $0.toolChoice = value }
-    }
-
-    static func user(_ value: String?) -> BuildComponent {
-        { $0.user = value }
     }
 }
 

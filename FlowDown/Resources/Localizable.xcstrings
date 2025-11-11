@@ -1002,6 +1002,22 @@
         }
       }
     },
+    "Apple Intelligence availability is unknown." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence availability is unknown."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法确定 Apple Intelligence 的可用性。"
+          }
+        }
+      }
+    },
     "Apple Intelligence is available and ready to use on this device." : {
       "localizations" : {
         "en" : {
@@ -1110,22 +1126,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple 智能在设备上提供离线可用的模型。"
-          }
-        }
-      }
-    },
-    "Apple Intelligence requires iOS 26 or later." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence requires iOS 26 or later."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple 智能需要 iOS 26 或更新的系统版本。"
           }
         }
       }
@@ -7711,6 +7711,12 @@
     },
     "Language Hint" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language Hint"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14905,6 +14911,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无法处理工具调用：%@"
+          }
+        }
+      }
+    },
+    "Unavailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unavailable"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不可用"
           }
         }
       }

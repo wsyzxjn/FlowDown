@@ -180,10 +180,7 @@ public final class AppleIntelligenceChatClient: ChatService {
         body: ChatRequestBody,
         persona: String
     ) throws -> SessionContext {
-        let additionalInstructions = toolChoiceInstructions(
-            choice: body.toolChoice,
-            hasTools: !(body.tools ?? []).isEmpty
-        )
+        let additionalInstructions = toolUsageInstructions(hasTools: !(body.tools ?? []).isEmpty)
 
         let instructionText = AppleIntelligencePromptBuilder.makeInstructions(
             persona: persona,
@@ -236,27 +233,13 @@ public final class AppleIntelligenceChatClient: ChatService {
         return String(data: data, encoding: .utf8)
     }
 
-    private func toolChoiceInstructions(
-        choice: ChatRequestBody.ToolChoice?,
-        hasTools: Bool
-    ) -> [String] {
-        guard hasTools, let choice else { return [] }
-        switch choice {
-        case .none:
+    private func toolUsageInstructions(hasTools: Bool) -> [String] {
+        guard hasTools else {
             return [
                 "Do not call any tool. Respond directly to the user.",
             ]
-        case .auto:
-            return []
-        case .required:
-            return [
-                "You must call at least one tool if it can help with the request.",
-            ]
-        case let .specific(functionName):
-            return [
-                "If you call a tool, you must call the tool named `\(functionName)`.",
-            ]
         }
+        return []
     }
 
     private func clampTemperature(_ value: Double) -> Double {
