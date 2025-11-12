@@ -39,6 +39,15 @@ Join our community on [Discord](https://discord.gg/UHKMRyJcgc) to share feedback
 - **iCloud Sync**: Seamlessly syncs your conversations, settings, and custom models across all your Apple devices.
 - **Open Source**: FlowDown is fully open source under the AGPL-3.0 license. We invite you to inspect the code and verify our commitment to privacy and quality.
 
+## Special Notes
+
+FlowDown is designed for users who want full control over their AI models and are willing to configure them manually.
+
+Every model behaves differently based on its capabilities, deployment method, and hardware resources. You are responsible for configuring and testing each model you use. FlowDown provides the tools and interfaces—you provide the configurations.
+
+For bulk management, FlowDown supports importing and exporting model configurations (`.fdmodel` files). You can script the generation of configuration files and import them all at once. Join our [Discord](https://discord.gg/UHKMRyJcgc) to discuss setups, but remember: community advice doesn't replace your own testing.
+
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Lakr233/FlowDown&type=date&legend=top-left)](https://www.star-history.com/#Lakr233/FlowDown&type=date&legend=top-left)

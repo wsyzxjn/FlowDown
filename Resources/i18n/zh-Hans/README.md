@@ -39,6 +39,12 @@
 - **iCloud 同步**：在你的所有 Apple 设备之间无缝同步对话、应用设置和自定义模型。
 - **开源透明**：我们相信开源的力量。浮望采用 AGPL-3.0 许可证，欢迎你随时审查代码，共同见证我们对隐私和品质的承诺。
 
+## 特别说明
+
+浮望面向希望完全掌控 AI 模型配置、并愿意手动配置的用户。每个模型的表现因其能力、部署方式和硬件资源而异。你需要对自己配置和使用的每个模型负责。浮望提供工具和接口——配置由你负责。
+
+如需批量管理，浮望支持导入和导出模型配置文件（`.fdmodel` 格式）。你可以编写脚本批量生成配置文件，然后一次性导入。欢迎加入我们的 [Discord](https://discord.gg/UHKMRyJcgc) 讨论配置方案，但请记住：社区建议不能替代你自己的测试验证。
+
 ## Star 历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Lakr233/FlowDown&type=date&legend=top-left)](https://www.star-history.com/#Lakr233/FlowDown&type=date&legend=top-left)
