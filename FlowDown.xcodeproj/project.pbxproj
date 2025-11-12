@@ -15,7 +15,6 @@
 		5050EACF2D46D41400634B81 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = 5050EACE2D46D41400634B81 /* MLX */; };
 		5050EB092D46DCB400634B81 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 5050EB082D46DCB400634B81 /* MLXLLM */; };
 		5050EB0B2D46DCB900634B81 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 5050EB0A2D46DCB900634B81 /* MLXLMCommon */; };
-		5050EB7C2D4789A300634B81 /* Transformers in Frameworks */ = {isa = PBXBuildFile; productRef = 5050EB7B2D4789A300634B81 /* Transformers */; };
 		505535BC2D72F38900F54B28 /* AlignedCollectionViewFlowLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 505535BB2D72F38900F54B28 /* AlignedCollectionViewFlowLayout */; };
 		505742472E1B8B8100A26090 /* DpkgVersion in Frameworks */ = {isa = PBXBuildFile; productRef = 505742462E1B8B8100A26090 /* DpkgVersion */; };
 		505BC6F92D42A73600894BB0 /* AlertController in Frameworks */ = {isa = PBXBuildFile; productRef = 505BC6F82D42A73600894BB0 /* AlertController */; };
@@ -150,7 +149,6 @@
 				50CB4E752DE30A57009C58E1 /* Digger in Frameworks */,
 				505BC6F92D42A73600894BB0 /* AlertController in Frameworks */,
 				500373C52D62757700585574 /* ScrubberKit in Frameworks */,
-				5050EB7C2D4789A300634B81 /* Transformers in Frameworks */,
 				50383CEA2D2E1E0D00426941 /* BetterCodable in Frameworks */,
 				502BCBD12D43DB2B00500180 /* ConfigurableKit in Frameworks */,
 				5050EB092D46DCB400634B81 /* MLXLLM in Frameworks */,
@@ -265,7 +263,6 @@
 				5050EACE2D46D41400634B81 /* MLX */,
 				5050EB082D46DCB400634B81 /* MLXLLM */,
 				5050EB0A2D46DCB900634B81 /* MLXLMCommon */,
-				5050EB7B2D4789A300634B81 /* Transformers */,
 				50B4CDAB2D4794F90028EB33 /* Digger */,
 				505FC6182D4945E500F4CB17 /* SPIndicator */,
 				505FC65A2D4A754F00F4CB17 /* MLXVLM */,
@@ -349,7 +346,6 @@
 				502BCBCE2D43DADD00500180 /* XCRemoteSwiftPackageReference "ConfigurableKit" */,
 				5050EA6C2D46B44000634B81 /* XCRemoteSwiftPackageReference "mlx-swift" */,
 				5050EB072D46DC9300634B81 /* XCRemoteSwiftPackageReference "mlx-swift-examples" */,
-				5050EB7A2D4789A300634B81 /* XCRemoteSwiftPackageReference "swift-transformers" */,
 				505FC6172D4945B300F4CB17 /* XCRemoteSwiftPackageReference "SPIndicator" */,
 				50B492922D4F602C00F4D2B3 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				EDF9A13C2D67788A001D183C /* XCRemoteSwiftPackageReference "Respring" */,
@@ -860,14 +856,6 @@
 				kind = branch;
 			};
 		};
-		5050EB7A2D4789A300634B81 /* XCRemoteSwiftPackageReference "swift-transformers" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/huggingface/swift-transformers";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
-			};
-		};
 		505742432E1B8B2A00A26090 /* XCRemoteSwiftPackageReference "DpkgVersion" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Lakr233/DpkgVersion";
@@ -1021,11 +1009,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5050EB072D46DC9300634B81 /* XCRemoteSwiftPackageReference "mlx-swift-examples" */;
 			productName = MLXLMCommon;
-		};
-		5050EB7B2D4789A300634B81 /* Transformers */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5050EB7A2D4789A300634B81 /* XCRemoteSwiftPackageReference "swift-transformers" */;
-			productName = Transformers;
 		};
 		505535BB2D72F38900F54B28 /* AlignedCollectionViewFlowLayout */ = {
 			isa = XCSwiftPackageProductDependency;
