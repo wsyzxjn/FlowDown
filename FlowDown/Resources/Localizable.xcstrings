@@ -6164,22 +6164,6 @@
         }
       }
     },
-    "Fetching Web Content" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fetching Web Content"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在获取网页内容"
-          }
-        }
-      }
-    },
     "File" : {
       "localizations" : {
         "en" : {
