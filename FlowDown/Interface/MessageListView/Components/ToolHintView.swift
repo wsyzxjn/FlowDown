@@ -13,22 +13,21 @@ final class ToolHintView: MessageListRowView {
         case failed
     }
 
-    var text: String? {
-        didSet { updateContentText() }
-    }
+    var text: String?
 
-    var toolName: String = .init() {
-        didSet { updateContentText() }
-    }
+    var toolName: String = .init()
 
     var state: State = .running {
-        didSet { updateStateImage() }
+        didSet {
+            updateContentText()
+            updateStateImage()
+        }
     }
 
     var clickHandler: (() -> Void)?
 
     private let backgroundGradientLayer = CAGradientLayer()
-    private let label: UILabel = .init().with {
+    private let label: ShimmerTextLabel = .init().with {
         $0.font = UIFont.preferredFont(forTextStyle: .body)
         $0.textColor = .label
         $0.minimumScaleFactor = 0.5
@@ -37,6 +36,7 @@ final class ToolHintView: MessageListRowView {
         $0.numberOfLines = 1
         $0.adjustsFontSizeToFitWidth = true
         $0.textAlignment = .left
+        $0.animationDuration = 1.6
     }
 
     private let symbolView: UIImageView = .init().with {
@@ -44,14 +44,6 @@ final class ToolHintView: MessageListRowView {
     }
 
     private let decoratedView: UIImageView = .init(image: .init(named: "tools"))
-    private let loadingSymbol: LoadingSymbol = .init().with {
-        $0.dotRadius = 2.5
-        $0.spacing = 4
-        $0.animationDuration = 0.4
-        $0.animationInterval = 0.12
-        $0.delay = 0.1
-    }
-
     private var isClickable: Bool = false
 
     override init(frame: CGRect) {
@@ -70,7 +62,6 @@ final class ToolHintView: MessageListRowView {
         contentView.addSubview(decoratedView)
         contentView.addSubview(symbolView)
         contentView.addSubview(label)
-        contentView.addSubview(loadingSymbol)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         contentView.addGestureRecognizer(tapGesture)
@@ -97,16 +88,7 @@ final class ToolHintView: MessageListRowView {
             height: labelSize.height
         )
 
-        // 只在运行状态显示 loading symbol
-        let loadingSize: CGSize = state == .running ? .init(width: 26, height: 12) : .zero
-        loadingSymbol.frame = .init(
-            x: label.frame.maxX + 2,
-            y: (contentView.bounds.height - loadingSize.height) / 2,
-            width: loadingSize.width,
-            height: loadingSize.height
-        )
-
-        contentView.frame.size.width = label.frame.maxX + (state == .running ? loadingSize.width + 2 : 0) + 18
+        contentView.frame.size.width = label.frame.maxX + 18
         decoratedView.frame = .init(x: contentView.bounds.width - 12, y: -4, width: 16, height: 16)
         backgroundGradientLayer.frame = contentView.bounds
         backgroundGradientLayer.cornerRadius = contentView.layer.cornerRadius
@@ -128,7 +110,7 @@ final class ToolHintView: MessageListRowView {
             let image = UIImage(systemName: "checkmark.seal", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemGreen
-            loadingSymbol.isHidden = true
+            label.stopShimmer()
         case .running:
             backgroundGradientLayer.colors = [
                 UIColor.systemBlue.withAlphaComponent(0.08).cgColor,
@@ -137,7 +119,7 @@ final class ToolHintView: MessageListRowView {
             let image = UIImage(systemName: "hourglass", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemBlue
-            loadingSymbol.isHidden = false
+            label.startShimmer()
         default:
             backgroundGradientLayer.colors = [
                 UIColor.systemRed.withAlphaComponent(0.08).cgColor,
@@ -146,7 +128,7 @@ final class ToolHintView: MessageListRowView {
             let image = UIImage(systemName: "xmark.seal", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemRed
-            loadingSymbol.isHidden = true
+            label.stopShimmer()
         }
         postUpdate()
     }
@@ -155,13 +137,13 @@ final class ToolHintView: MessageListRowView {
         switch state {
         case .running:
             isClickable = false
-            label.text = .init(localized: "Tool call for \(toolName) running")
+            label.text = String(localized: "Tool call for \(toolName) running")
         case .suceeded:
             isClickable = true
-            label.text = .init(localized: "Tool call for \(toolName) completed.")
+            label.text = String(localized: "Tool call for \(toolName) completed.")
         case .failed:
             isClickable = true
-            label.text = .init(localized: "Tool call for \(toolName) failed.")
+            label.text = String(localized: "Tool call for \(toolName) failed.")
         }
         postUpdate()
     }

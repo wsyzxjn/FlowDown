@@ -209,8 +209,8 @@ extension MessageListView: ListViewAdapter {
                     .failed
                 }
                 toolHintView.toolName = status.name
-                toolHintView.state = state
                 toolHintView.text = status.message
+                toolHintView.state = state
                 toolHintView.clickHandler = { [weak self] in
                     let viewer = TextViewerController(editable: false)
                     viewer.title = String(localized: "Text Content")
