@@ -101,7 +101,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ · %@"
+            "value" : "%@ • %@"
           }
         }
       }
@@ -149,7 +149,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$d 模版已成功导入，%2$d 失败。"
+            "value" : "%1$d 模板已成功导入，%2$d 失败。"
           }
         }
       }
@@ -181,7 +181,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld 个模版已成功导入，%2$lld 失败。"
+            "value" : "%1$lld 个模板已成功导入，%2$lld 失败。"
           }
         }
       }
@@ -213,7 +213,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%d．【%@】%@"
+            "value" : "%d.【%@】%@"
           }
         }
       }
@@ -532,7 +532,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "调整搜索策略积极性。"
+            "value" : "调整网页搜索的触发策略。"
           }
         }
       }
@@ -1205,7 +1205,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "你确定要删除这个模版吗？此操作不可取消。"
+            "value" : "你确定要删除这个模板吗？此操作不可撤销。"
           }
         }
       }
@@ -1221,7 +1221,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "你确定要抹掉全部内容并重置数据库吗？软件将会退出。"
+            "value" : "你确定要删除全部内容并重置数据库吗？软件将会退出。"
           }
         }
       }
@@ -1510,7 +1510,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "通常"
+            "value" : "均衡"
           }
         }
       }
@@ -1990,7 +1990,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "对话模版"
+            "value" : "对话模板"
           }
         }
       }
@@ -2102,7 +2102,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "选择模版"
+            "value" : "选择模板"
           }
         }
       }
@@ -3416,7 +3416,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "创建模版"
+            "value" : "创建模板"
           }
         }
       }
@@ -3944,7 +3944,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "删除服务端"
+            "value" : "删除服务器"
           }
         }
       }
@@ -3960,7 +3960,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "删除模版"
+            "value" : "删除模板"
           }
         }
       }
@@ -4009,7 +4009,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "永久删除这个模版。"
+            "value" : "永久删除这个模板。"
           }
         }
       }
@@ -4435,13 +4435,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duck Duck Go Search"
+            "value" : "DuckDuckGo Search"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "鸭鸭冲搜索"
+            "value" : "DuckDuckGo 搜索"
           }
         }
       }
@@ -4715,7 +4715,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "编辑模版"
+            "value" : "编辑模板"
           }
         }
       }
@@ -5085,7 +5085,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "编辑模版名称"
+            "value" : "编辑模板名称"
           }
         }
       }
@@ -5166,7 +5166,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "必要"
+            "value" : "仅在必要时"
           }
         }
       }
@@ -5454,7 +5454,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导出模版"
+            "value" : "导出模板"
           }
         }
       }
@@ -5486,7 +5486,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导出对话模版到文件以便共享。"
+            "value" : "导出对话模板到文件以便共享。"
           }
         }
       }
@@ -5903,7 +5903,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无法导入模版：%@"
+            "value" : "无法导入模板：%@"
           }
         }
       }
@@ -6483,7 +6483,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "生成对话模版"
+            "value" : "生成对话模板"
           }
         }
       }
@@ -6595,7 +6595,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "生成模版"
+            "value" : "生成模板"
           }
         }
       }
@@ -6936,7 +6936,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "如果遇到问题，你可以尝试重置软件。这会抹掉全部内容并重置数据库。软件将会退出。"
+            "value" : "如果遇到问题，你可以尝试重置软件。这会删除全部内容并重置数据库。软件将会退出。"
           }
         }
       }
@@ -7192,7 +7192,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "导入了 %lld 个模版。"
+            "value" : "导入了 %lld 个模板。"
           }
         }
       }
@@ -7256,7 +7256,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在导入模版"
+            "value" : "正在导入模板"
           }
         }
       }
@@ -8332,7 +8332,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "让文本更加简洁"
+            "value" : "精简文本"
           }
         }
       }
@@ -9307,7 +9307,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用模版新建对话"
+            "value" : "使用模板新建对话"
           }
         }
       }
@@ -10575,7 +10575,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请先选择一个模型，然后再次尝试生成对话模版。"
+            "value" : "请先选择一个模型，然后再次尝试生成对话模板。"
           }
         }
       }
@@ -10768,7 +10768,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "积极"
+            "value" : "主动"
           }
         }
       }
@@ -11619,7 +11619,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重写模版"
+            "value" : "重写模板"
           }
         }
       }
@@ -12768,13 +12768,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Streamble HTTP"
+            "value" : "Streamable HTTP"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "流式文本传输（Streamable HTTP）"
+            "value" : "流式文本传输 (Streamable HTTP)"
           }
         }
       }
@@ -13324,7 +13324,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "模版"
+            "value" : "模板"
           }
         }
       }
@@ -13340,7 +13340,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "模版 %@ 已生成，并成功保存。"
+            "value" : "模板 %@ 已生成，并成功保存。"
           }
         }
       }
@@ -13356,7 +13356,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "模版 %lld"
+            "value" : "模板 %lld"
           }
         }
       }
@@ -13372,7 +13372,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "模版已生成"
+            "value" : "模板已生成"
           }
         }
       }
@@ -13628,7 +13628,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此对话模版显示的名称。"
+            "value" : "此对话模板显示的名称。"
           }
         }
       }
@@ -14156,7 +14156,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此对话基于模版 %@ 创建。"
+            "value" : "此对话基于模板 %@ 创建。"
           }
         }
       }
@@ -14172,7 +14172,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "此对话提取自 %@ 。"
+            "value" : "此对话由“%@”精炼而来。"
           }
         }
       }
@@ -14476,7 +14476,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "将使用 %@ 从当前对话提取你的请求并保存为模版以便后续使用。这会花费一些时间。"
+            "value" : "将使用 %@ 从当前对话提取你的请求并保存为模板以便后续使用。这会花费一些时间。"
           }
         }
       }
@@ -15006,7 +15006,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "旅行& 地点"
+            "value" : "旅行与地点"
           }
         }
       }
@@ -15561,7 +15561,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unsupporte"
+            "value" : "Unsupported"
           }
         },
         "zh-Hans" : {
@@ -16944,7 +16944,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "工作空间（可选）"
+            "value" : "工作组（可选）"
           }
         }
       }
@@ -17107,7 +17107,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "你可以使用 %@ 去改写这个模版，例如添加更多指示等。"
+            "value" : "你可以使用 %@ 去改写这个模板，例如添加更多指示等。"
           }
         }
       }
