@@ -199,7 +199,7 @@ extension MessageListView: ListViewAdapter {
                 }
             }
         } else if let toolHintView = rowView as? ToolHintView {
-            if case let .toolCallStatus(status) = entry {
+            if case let .toolCallStatus(messageID, status) = entry {
                 let state: ToolHintView.State = switch status.state {
                 case 0:
                     .running
@@ -212,27 +212,7 @@ extension MessageListView: ListViewAdapter {
                 toolHintView.text = status.message
                 toolHintView.state = state
                 toolHintView.clickHandler = { [weak self] in
-                    let viewer = TextViewerController(editable: false)
-                    viewer.title = String(localized: "Text Content")
-                    viewer.text = status.message
-                    #if targetEnvironment(macCatalyst)
-                        let nav = UINavigationController(rootViewController: viewer)
-                        nav.view.backgroundColor = .background
-                        let holder = AlertBaseController(
-                            rootViewController: nav,
-                            preferredWidth: 555,
-                            preferredHeight: 555
-                        )
-                        holder.shouldDismissWhenTappedAround = true
-                        holder.shouldDismissWhenEscapeKeyPressed = true
-                    #else
-                        let holder = UINavigationController(rootViewController: viewer)
-                        holder.preferredContentSize = .init(width: 555, height: 555 - holder.navigationBar.frame.height)
-                        holder.modalTransitionStyle = .coverVertical
-                        holder.modalPresentationStyle = .formSheet
-                        holder.view.backgroundColor = .background
-                    #endif
-                    self?.parentViewController?.present(holder, animated: true)
+                    self?.presentToolCallDetails(for: messageID, status: status)
                 }
             }
         }
@@ -285,6 +265,14 @@ extension MessageListView: ListViewAdapter {
             messageIdentifier = msgID
             representation = messageRepresentation
             isReasoningContent = false
+        case let .toolCallStatus(messageID, status):
+            let action = UIAction(
+                title: String(localized: "View Details"),
+                image: UIImage(systemName: "doc.text.magnifyingglass")
+            ) { [weak self] _ in
+                self?.presentToolCallDetails(for: messageID, status: status)
+            }
+            return UIMenu(children: [action])
         default:
             return nil
         }
@@ -295,6 +283,89 @@ extension MessageListView: ListViewAdapter {
             isReasoningContent: isReasoningContent,
             referenceView: referenceView
         )
+    }
+
+    private func presentToolCallDetails(for messageIdentifier: Message.ID, status: Message.ToolStatus) {
+        let viewer = TextViewerController(editable: false)
+        viewer.title = String(localized: "Text Content")
+        viewer.text = toolCallDetailsText(for: messageIdentifier, status: status)
+        #if targetEnvironment(macCatalyst)
+            let nav = UINavigationController(rootViewController: viewer)
+            nav.view.backgroundColor = .background
+            let holder = AlertBaseController(
+                rootViewController: nav,
+                preferredWidth: 555,
+                preferredHeight: 555
+            )
+            holder.shouldDismissWhenTappedAround = true
+            holder.shouldDismissWhenEscapeKeyPressed = true
+        #else
+            let holder = UINavigationController(rootViewController: viewer)
+            holder.preferredContentSize = .init(width: 555, height: 555 - holder.navigationBar.frame.height)
+            holder.modalTransitionStyle = .coverVertical
+            holder.modalPresentationStyle = .formSheet
+            holder.view.backgroundColor = .background
+        #endif
+        parentViewController?.present(holder, animated: true)
+    }
+
+    private func toolCallDetailsText(for messageIdentifier: Message.ID, status: Message.ToolStatus) -> String {
+        var sections: [String] = []
+
+        let title = switch status.state {
+        case 1:
+            String(localized: "Tool call for \(status.name) completed.")
+        case 2:
+            String(localized: "Tool call for \(status.name) failed.")
+        default:
+            String(localized: "Tool call for \(status.name) running")
+        }
+        sections.append(title)
+
+        if let message = session.message(for: messageIdentifier) {
+            if let toolRequest = session.decodeToolRequestFromToolMessage(message) {
+                var parameterText = toolRequest.args
+                if let pretty = prettyPrintedJSON(from: toolRequest.args) {
+                    parameterText = pretty
+                }
+                sections.append([
+                    String(localized: "Parameters"),
+                    parameterText,
+                ].joined(separator: "\n\n"))
+            } else {
+                sections.append(String(localized: "Unable to decode tool parameters."))
+            }
+        } else {
+            sections.append(String(localized: "Unable to locate the tool message in this session."))
+        }
+
+        let trimmedResult = status.message.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedResult.isEmpty {
+            var formattedResult = trimmedResult
+            if let pretty = prettyPrintedJSON(from: trimmedResult) {
+                formattedResult = pretty
+            }
+            sections.append([
+                String(localized: "Result"),
+                formattedResult,
+            ].joined(separator: "\n\n"))
+        }
+
+        return sections.joined(separator: "\n\n")
+    }
+
+    private func prettyPrintedJSON(from jsonString: String) -> String? {
+        guard let data = jsonString.data(using: .utf8) else { return nil }
+        guard let object = try? JSONSerialization.jsonObject(with: data) else {
+            return nil
+        }
+        guard JSONSerialization.isValidJSONObject(object) else {
+            return nil
+        }
+        guard let pretty = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys]) else {
+            return nil
+        }
+        return String(decoding: pretty, as: UTF8.self)
     }
 
     private func buildMenu(

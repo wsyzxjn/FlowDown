@@ -11336,6 +11336,9 @@
         }
       }
     },
+    "Result" : {
+
+    },
     "Result Limit" : {
       "localizations" : {
         "en" : {
@@ -15124,6 +15127,9 @@
         }
       }
     },
+    "Unable to decode tool parameters." : {
+
+    },
     "Unable to Determine" : {
       "localizations" : {
         "en" : {
@@ -15219,6 +15225,9 @@
           }
         }
       }
+    },
+    "Unable to locate the tool message in this session." : {
+
     },
     "Unable to open link." : {
       "localizations" : {
@@ -16163,6 +16172,9 @@
           }
         }
       }
+    },
+    "View Details" : {
+
     },
     "View Logs" : {
       "localizations" : {

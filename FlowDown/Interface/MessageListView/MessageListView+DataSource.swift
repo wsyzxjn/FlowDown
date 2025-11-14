@@ -15,7 +15,7 @@ extension MessageListView {
         case hint(String, String)
         case webSearchContent(Message.WebSearchStatus)
         case activityReporting(String)
-        case toolCallStatus(Message.ToolStatus)
+        case toolCallStatus(Message.ID, Message.ToolStatus)
 
         var id: String {
             switch self {
@@ -33,8 +33,8 @@ extension MessageListView {
                 "WebSearchContent.\(status.id)"
             case let .activityReporting(content):
                 "ActivityReporting.\(content)"
-            case let .toolCallStatus(status):
-                "ToolCallStatus.\(status.id)"
+            case let .toolCallStatus(messageID, status):
+                "ToolCallStatus.\(messageID).\(status.id)"
             }
         }
     }
@@ -165,7 +165,7 @@ extension MessageListView {
 
             case .toolHint:
                 checkAddDateHint(message.creation)
-                entries.append(.toolCallStatus(message.toolStatus))
+                entries.append(.toolCallStatus(message.objectId, message.toolStatus))
 
             // MARK: - Drop Unrelated
 
