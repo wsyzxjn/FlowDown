@@ -84,6 +84,8 @@ extension UIUserInterfaceStyle {
                 }
             }
             .store(in: &cancellables)
+
+        reapplyConfiguredStyle()
     }
 
     static func apply(style: Self) {
@@ -101,5 +103,19 @@ extension UIUserInterfaceStyle {
                 .flatMap(\.windows)
                 .forEach { $0.overrideUserInterfaceStyle = style }
         #endif
+    }
+
+    static func configuredStyle() -> UIUserInterfaceStyle {
+        guard
+            let rawValue: Int = ConfigurableKit.value(forKey: storageKey),
+            let style = UIUserInterfaceStyle(rawValue: rawValue)
+        else {
+            return .unspecified
+        }
+        return style
+    }
+
+    static func reapplyConfiguredStyle() {
+        apply(style: configuredStyle())
     }
 }

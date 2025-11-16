@@ -117,6 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) {}
 
     func applicationDidBecomeActive(_: UIApplication) {
+        UIUserInterfaceStyle.reapplyConfiguredStyle()
         MLX.GPU.onApplicationBecomeActivate()
     }
 
