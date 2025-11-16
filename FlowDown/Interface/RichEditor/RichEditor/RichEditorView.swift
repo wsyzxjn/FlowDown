@@ -12,6 +12,12 @@ class RichEditorView: EditorSectionView {
             name: UIApplication.willResignActiveNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
     }
 
     @available(*, unavailable)

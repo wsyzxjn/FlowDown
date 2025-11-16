@@ -11,4 +11,8 @@ extension RichEditorView {
     @objc func applicationWillResignActive() {
         parentViewController?.view.endEditing(true)
     }
+
+    @objc func applicationDidBecomeActive() {
+        colorfulShadow.refreshAfterReturningToForeground()
+    }
 }

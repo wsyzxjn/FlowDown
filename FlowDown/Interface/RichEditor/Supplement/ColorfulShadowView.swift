@@ -55,6 +55,11 @@ final class ColorfulShadowView: UIView {
         didSet { applyCurrentMode() }
     }
 
+    func refreshAfterReturningToForeground() {
+        gradientView.speed = 1
+        scheduleSpeedStop()
+    }
+
     init() {
         director = SpeckleAnimationRoundedRectangleDirector(
             inset: -0.2,
