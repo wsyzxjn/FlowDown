@@ -111,6 +111,7 @@ class UpdateManager: NSObject {
             title: "Update Available",
             message: "A new version \(package.tag) is available. Would you like to download it?"
         ) { context in
+            context.allowSimpleDispose()
             context.addAction(title: "Cancel") {
                 context.dispose()
             }

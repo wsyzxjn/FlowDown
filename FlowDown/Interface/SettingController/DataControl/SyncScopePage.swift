@@ -79,6 +79,7 @@ final class SyncScopePage: StackScrollController {
                         title: "Error Occurred",
                         message: "iCloud synchronization is not enabled. You have to enable iCloud sync in settings before fetching updates."
                     ) { context in
+                        context.allowSimpleDispose()
                         context.addAction(title: "OK", attribute: .accent) { context.dispose() }
                     }
                     controller.present(alert, animated: true)
@@ -92,6 +93,7 @@ final class SyncScopePage: StackScrollController {
                             title: "Update Requested",
                             message: "The request to fetch updates has been sent. Depending on the amount of data, it may take some time to complete."
                         ) { context in
+                            context.allowSimpleDispose()
                             context.addAction(title: "OK", attribute: .accent) {
                                 context.dispose()
                             }

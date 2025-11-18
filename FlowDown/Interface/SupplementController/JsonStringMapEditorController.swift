@@ -30,6 +30,7 @@ class JsonStringMapEditorController: CodeEditorController {
                 title: "Error",
                 message: "Unable to decode text into data."
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "OK", attribute: .accent) {
                     context.dispose()
                 }
@@ -45,6 +46,7 @@ class JsonStringMapEditorController: CodeEditorController {
                 title: "Error",
                 message: "Unable to decode string key value map from text: \(error.localizedDescription)"
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "OK", attribute: .accent) {
                     context.dispose()
                 }

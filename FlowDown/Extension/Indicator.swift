@@ -68,6 +68,7 @@ enum Indicator {
                                 title: "Error",
                                 message: "An error occurred: \(error.localizedDescription)"
                             ) { context in
+                                context.allowSimpleDispose()
                                 context.addAction(title: "OK", attribute: .accent) {
                                     context.dispose()
                                 }

@@ -390,6 +390,7 @@ class LocalModelEditorController: StackScrollController {
                 title: "Unsupporte",
                 message: "Your device does not support MLX."
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "OK", attribute: .accent) {
                     context.dispose {
                         self.navigationController?.popViewController()

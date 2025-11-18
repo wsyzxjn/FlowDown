@@ -40,6 +40,7 @@ extension ConversationManager {
                 title: "Clear Editing",
                 message: "This will delete all edits, including unsent conversation text and attachments."
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "Cancel") {
                     context.dispose()
                 }

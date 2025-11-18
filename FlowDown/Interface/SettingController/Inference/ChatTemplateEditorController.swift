@@ -110,6 +110,7 @@ class ChatTemplateEditorController: StackScrollController, UITextViewDelegate {
                 title: "No Model Selected",
                 message: "Please select a default chat model in settings before using rewrite features."
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "OK") {
                     context.dispose()
                 }

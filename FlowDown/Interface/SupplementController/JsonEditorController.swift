@@ -97,6 +97,7 @@ class JsonEditorController: CodeEditorController {
             title: "Error",
             message: message
         ) { context in
+            context.allowSimpleDispose()
             context.addAction(title: "OK", attribute: .accent) {
                 context.dispose()
             }

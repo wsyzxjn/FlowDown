@@ -232,6 +232,7 @@ class HubModelDetailController: StackScrollController {
                 Estimated download size: \(sizeText)
                 """
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "Cancel") {
                     context.dispose()
                 }
@@ -251,6 +252,7 @@ class HubModelDetailController: StackScrollController {
                 Estimated download size: \(sizeText)
                 """
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "Cancel") {
                     context.dispose()
                 }

@@ -140,6 +140,7 @@ extension SettingController.SettingContent {
                         title: "No Memories",
                         message: "There are no memories to export."
                     ) { context in
+                        context.allowSimpleDispose()
                         context.addAction(title: "OK", attribute: .accent) {
                             context.dispose()
                         }
@@ -172,6 +173,7 @@ extension SettingController.SettingContent {
                     title: "Export Failed",
                     message: "Failed to export memories: \(error.localizedDescription)"
                 ) { context in
+                    context.allowSimpleDispose()
                     context.addAction(title: "OK", attribute: .accent) {
                         context.dispose()
                     }
@@ -205,6 +207,7 @@ extension SettingController.SettingContent {
                                     title: "Error",
                                     message: "Failed to clear memories: \(error.localizedDescription)"
                                 ) { context in
+                                    context.allowSimpleDispose()
                                     context.addAction(title: "OK", attribute: .accent) {
                                         context.dispose()
                                     }

@@ -134,6 +134,7 @@ class MemoryListController: UIViewController {
                         title: "Error",
                         message: "Failed to delete memory: \(error.localizedDescription)"
                     ) { context in
+                        context.allowSimpleDispose()
                         context.addAction(title: "OK", attribute: .accent) {
                             context.dispose()
                         }
@@ -374,6 +375,7 @@ private extension MemoryListController {
                             title: "Error",
                             message: "Failed to update memory: \(error.localizedDescription)"
                         ) { context in
+                            context.allowSimpleDispose()
                             context.addAction(title: "OK", attribute: .accent) {
                                 context.dispose()
                             }
@@ -397,6 +399,7 @@ private extension MemoryListController {
             title: String(localized: "Error"),
             message: error.localizedDescription
         ) { context in
+            context.allowSimpleDispose()
             context.addAction(title: String(localized: "OK"), attribute: .accent) {
                 context.dispose()
             }

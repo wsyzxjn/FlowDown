@@ -238,7 +238,24 @@ extension AppDelegate {
 
     @objc func deleteConversationFromMenu(_: Any?) {
         withCurrentConversation { _, conversationID, _ in
+            let conversations = ConversationManager.shared.conversations.value.values
+            let nextIdentifier: Conversation.ID? = {
+                guard let currentIndex = conversations.firstIndex(where: { $0.id == conversationID }) else {
+                    return nil
+                }
+                if currentIndex + 1 < conversations.count {
+                    return conversations[currentIndex + 1].id
+                } else if currentIndex > 0 {
+                    return conversations[currentIndex - 1].id
+                } else {
+                    return nil
+                }
+            }()
+
             ConversationManager.shared.deleteConversation(identifier: conversationID)
+            if let nextIdentifier {
+                ChatSelection.shared.select(nextIdentifier)
+            }
         }
     }
 

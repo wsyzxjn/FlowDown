@@ -30,6 +30,7 @@ extension ChatView: RichEditorView.Delegate {
                     title: "Error",
                     message: "You need to add a model to use."
                 ) { context in
+                    context.allowSimpleDispose()
                     context.addAction(title: "Cancel") {
                         context.dispose()
                     }
@@ -47,6 +48,7 @@ extension ChatView: RichEditorView.Delegate {
                     title: "Error",
                     message: "You need to select a model to use."
                 ) { context in
+                    context.allowSimpleDispose()
                     context.addAction(title: "OK", attribute: .accent) {
                         context.dispose()
                     }
@@ -67,6 +69,7 @@ extension ChatView: RichEditorView.Delegate {
                     title: "Error",
                     message: "A tool model is required for browsing."
                 ) { context in
+                    context.allowSimpleDispose()
                     context.addAction(title: "Close") {
                         context.dispose()
                     }
@@ -94,6 +97,7 @@ extension ChatView: RichEditorView.Delegate {
                     title: "Error",
                     message: "A visual model is required for image attachments."
                 ) { context in
+                    context.allowSimpleDispose()
                     context.addAction(title: "Close") {
                         context.dispose()
                     }

@@ -68,6 +68,7 @@ extension RewriteAction {
                 title: "Model Not Available",
                 message: "Please select a model to rewrite this message."
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "OK", attribute: .accent) {
                     context.dispose()
                 }

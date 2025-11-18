@@ -203,6 +203,7 @@ extension RichEditorView {
                                 title: NSLocalizedString("Error", comment: ""),
                                 message: NSLocalizedString("Failed to convert PDF pages to images.", comment: "")
                             ) { context in
+                                context.allowSimpleDispose()
                                 context.addAction(title: NSLocalizedString("OK", comment: ""), attribute: .accent) {
                                     context.dispose()
                                 }
@@ -219,6 +220,7 @@ extension RichEditorView {
                             title: NSLocalizedString("Success", comment: ""),
                             message: String(format: NSLocalizedString("Successfully imported %lld page(s) from PDF.", comment: ""), images.count)
                         ) { context in
+                            context.allowSimpleDispose()
                             context.addAction(title: NSLocalizedString("OK", comment: ""), attribute: .accent) {
                                 context.dispose()
                             }
@@ -468,6 +470,7 @@ extension RichEditorView: QuickSettingBar.Delegate {
                     title: NSLocalizedString("Error", comment: ""),
                     message: NSLocalizedString("This model does not support tool call or no model is selected.", comment: "")
                 ) { context in
+                    context.allowSimpleDispose()
                     context.addAction(title: NSLocalizedString("OK", comment: ""), attribute: .accent) {
                         context.dispose()
                     }
@@ -501,6 +504,7 @@ extension RichEditorView: ControlPanel.Delegate {
                     title: NSLocalizedString("Error", comment: ""),
                     message: NSLocalizedString("Please enter a valid URL.", comment: "")
                 ) { context in
+                    context.allowSimpleDispose()
                     context.addAction(title: NSLocalizedString("OK", comment: ""), attribute: .accent) {
                         context.dispose()
                     }
@@ -519,6 +523,7 @@ extension RichEditorView: ControlPanel.Delegate {
                             title: NSLocalizedString("Error", comment: ""),
                             message: NSLocalizedString("Failed to fetch the web content.", comment: "")
                         ) { context in
+                            context.allowSimpleDispose()
                             context.addAction(title: NSLocalizedString("OK", comment: ""), attribute: .accent) {
                                 context.dispose()
                             }

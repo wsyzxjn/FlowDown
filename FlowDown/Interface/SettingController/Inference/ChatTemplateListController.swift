@@ -265,6 +265,7 @@ extension ChatTemplateListController: UIDocumentPickerDelegate {
                         title: "Import Failed",
                         message: String(localized: "\(success) templates imported successfully, \(failure.count) failed.")
                     ) { context in
+                        context.allowSimpleDispose()
                         context.addAction(title: "OK", attribute: .accent) {
                             context.dispose()
                         }

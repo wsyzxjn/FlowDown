@@ -78,6 +78,7 @@ extension SettingController.SettingContent.ModelController {
                         title: "Unsupported",
                         message: "Your device does not support MLX."
                     ) { context in
+                        context.allowSimpleDispose()
                         context.addAction(title: "OK", attribute: .accent) {
                             context.dispose()
                         }

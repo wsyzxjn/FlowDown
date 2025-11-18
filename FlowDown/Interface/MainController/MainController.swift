@@ -383,6 +383,7 @@ class MainController: UIViewController {
                 title: title,
                 message: message
             ) { context in
+                context.allowSimpleDispose()
                 context.addAction(title: "OK") {
                     context.dispose(completion)
                 }

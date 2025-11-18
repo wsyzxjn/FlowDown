@@ -275,6 +275,7 @@ extension ConversationManager {
                                     title: "Model Not Available",
                                     message: "Please select a model to generate chat template."
                                 ) { context in
+                                    context.allowSimpleDispose()
                                     context.addAction(title: "OK", attribute: .accent) {
                                         context.dispose()
                                     }
@@ -286,6 +287,7 @@ extension ConversationManager {
                                 title: "Compress to New Chat",
                                 message: "This will use \(name) compress the current conversation into a short summary and create a new chat with it. The original conversation will remain unchanged."
                             ) { context in
+                                context.allowSimpleDispose()
                                 context.addAction(title: "Cancel") {
                                     context.dispose()
                                 }
@@ -335,6 +337,7 @@ extension ConversationManager {
                                     title: "Model Not Available",
                                     message: "Please select a model to generate chat template."
                                 ) { context in
+                                    context.allowSimpleDispose()
                                     context.addAction(title: "OK", attribute: .accent) {
                                         context.dispose()
                                     }
@@ -346,6 +349,7 @@ extension ConversationManager {
                                 title: "Generate Chat Template",
                                 message: "This will extract your requests from the current conversation using \(name) and save it as a template for later use. This may take some time."
                             ) { context in
+                                context.allowSimpleDispose()
                                 context.addAction(title: "Cancel") {
                                     context.dispose()
                                 }
@@ -368,6 +372,7 @@ extension ConversationManager {
                                                     title: "Template Generated",
                                                     message: "Template \(template.name) has been successfully generated and saved."
                                                 ) { context in
+                                                    context.allowSimpleDispose()
                                                     context.addAction(title: "OK") {
                                                         context.dispose()
                                                     }

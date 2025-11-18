@@ -393,6 +393,7 @@ extension SettingController.SettingContent {
                 title: "Import Database",
                 message: "Importing a database backup will replace all current conversations, memories, and cloud model settings. This action cannot be undone."
             ) { [weak self] context in
+                context.allowSimpleDispose()
                 context.addAction(title: "Cancel") {
                     context.dispose()
                 }
@@ -437,6 +438,7 @@ extension SettingController.SettingContent {
                         title: "Import Complete",
                         message: "FlowDown will restart to apply the imported database."
                     ) { context in
+                        context.allowSimpleDispose()
                         context.addAction(title: "OK", attribute: .accent) {
                             SyncEngine.resetCachedState()
                             context.dispose {

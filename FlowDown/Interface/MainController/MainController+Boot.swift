@@ -29,6 +29,7 @@ extension MainController {
             title: "External Resources",
             message: "\(text)"
         ) { context in
+            context.allowSimpleDispose()
             context.addAction(title: "OK", attribute: .accent) {
                 context.dispose {}
             }
