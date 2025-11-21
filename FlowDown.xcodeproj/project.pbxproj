@@ -13,13 +13,10 @@
 		502BCBD12D43DB2B00500180 /* ConfigurableKit in Frameworks */ = {isa = PBXBuildFile; productRef = 502BCBD02D43DB2B00500180 /* ConfigurableKit */; };
 		50383CEA2D2E1E0D00426941 /* BetterCodable in Frameworks */ = {isa = PBXBuildFile; productRef = 50383CE92D2E1E0D00426941 /* BetterCodable */; };
 		5050EACF2D46D41400634B81 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = 5050EACE2D46D41400634B81 /* MLX */; };
-		5050EB092D46DCB400634B81 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 5050EB082D46DCB400634B81 /* MLXLLM */; };
-		5050EB0B2D46DCB900634B81 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 5050EB0A2D46DCB900634B81 /* MLXLMCommon */; };
 		505535BC2D72F38900F54B28 /* AlignedCollectionViewFlowLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 505535BB2D72F38900F54B28 /* AlignedCollectionViewFlowLayout */; };
 		505742472E1B8B8100A26090 /* DpkgVersion in Frameworks */ = {isa = PBXBuildFile; productRef = 505742462E1B8B8100A26090 /* DpkgVersion */; };
 		505BC6F92D42A73600894BB0 /* AlertController in Frameworks */ = {isa = PBXBuildFile; productRef = 505BC6F82D42A73600894BB0 /* AlertController */; };
 		505FC6192D4945E500F4CB17 /* SPIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = 505FC6182D4945E500F4CB17 /* SPIndicator */; };
-		505FC65B2D4A754F00F4CB17 /* MLXVLM in Frameworks */ = {isa = PBXBuildFile; productRef = 505FC65A2D4A754F00F4CB17 /* MLXVLM */; };
 		506373A12EC0D6E200C8A9FB /* AlignedCollectionViewFlowLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 506373A02EC0D6E200C8A9FB /* AlignedCollectionViewFlowLayout */; };
 		506373A62EC0DC7900C8A9FB /* ColorfulX in Frameworks */ = {isa = PBXBuildFile; productRef = 506373A52EC0DC7900C8A9FB /* ColorfulX */; };
 		506C93CB2EBE4BBC00CB87A9 /* PrivacyPolicy.md in Resources */ = {isa = PBXBuildFile; fileRef = 506C93C92EBE4BBC00CB87A9 /* PrivacyPolicy.md */; };
@@ -138,7 +135,6 @@
 				505FC6192D4945E500F4CB17 /* SPIndicator in Frameworks */,
 				505742472E1B8B8100A26090 /* DpkgVersion in Frameworks */,
 				506373A12EC0D6E200C8A9FB /* AlignedCollectionViewFlowLayout in Frameworks */,
-				5050EB0B2D46DCB900634B81 /* MLXLMCommon in Frameworks */,
 				50E3FA092D6D7FB8000405BD /* GPTEncoder in Frameworks */,
 				5050EACF2D46D41400634B81 /* MLX in Frameworks */,
 				ED16359C2D5C5BDA0081BD0B /* ChatClientKit in Frameworks */,
@@ -151,8 +147,6 @@
 				500373C52D62757700585574 /* ScrubberKit in Frameworks */,
 				50383CEA2D2E1E0D00426941 /* BetterCodable in Frameworks */,
 				502BCBD12D43DB2B00500180 /* ConfigurableKit in Frameworks */,
-				5050EB092D46DCB400634B81 /* MLXLLM in Frameworks */,
-				505FC65B2D4A754F00F4CB17 /* MLXVLM in Frameworks */,
 				505535BC2D72F38900F54B28 /* AlignedCollectionViewFlowLayout in Frameworks */,
 				5078496A2D285B5900B1F430 /* MarkdownView in Frameworks */,
 				502272D22EB3DE3200AF9D28 /* UIEffectKit in Frameworks */,
@@ -261,11 +255,8 @@
 				505BC6F82D42A73600894BB0 /* AlertController */,
 				502BCBD02D43DB2B00500180 /* ConfigurableKit */,
 				5050EACE2D46D41400634B81 /* MLX */,
-				5050EB082D46DCB400634B81 /* MLXLLM */,
-				5050EB0A2D46DCB900634B81 /* MLXLMCommon */,
 				50B4CDAB2D4794F90028EB33 /* Digger */,
 				505FC6182D4945E500F4CB17 /* SPIndicator */,
-				505FC65A2D4A754F00F4CB17 /* MLXVLM */,
 				50B492932D4F609E00F4D2B3 /* ZIPFoundation */,
 				ED16359B2D5C5BDA0081BD0B /* ChatClientKit */,
 				500373C42D62757700585574 /* ScrubberKit */,
@@ -345,7 +336,6 @@
 				50383CE82D2E1DF200426941 /* XCRemoteSwiftPackageReference "BetterCodable" */,
 				502BCBCE2D43DADD00500180 /* XCRemoteSwiftPackageReference "ConfigurableKit" */,
 				5050EA6C2D46B44000634B81 /* XCRemoteSwiftPackageReference "mlx-swift" */,
-				5050EB072D46DC9300634B81 /* XCRemoteSwiftPackageReference "mlx-swift-examples" */,
 				505FC6172D4945B300F4CB17 /* XCRemoteSwiftPackageReference "SPIndicator" */,
 				50B492922D4F602C00F4D2B3 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				EDF9A13C2D67788A001D183C /* XCRemoteSwiftPackageReference "Respring" */,
@@ -505,7 +495,7 @@
 					"@executable_path/Frameworks",
 				);
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
-				MARKETING_VERSION = 4.0.9;
+				MARKETING_VERSION = 4.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -571,7 +561,7 @@
 					"@executable_path/Frameworks",
 				);
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
-				MARKETING_VERSION = 4.0.9;
+				MARKETING_VERSION = 4.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -805,7 +795,7 @@
 			repositoryURL = "https://github.com/Lakr233/AlertController";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.2;
+				minimumVersion = 2.1.0;
 			};
 		};
 		50014D7D2D8A9B0000C10932 /* XCRemoteSwiftPackageReference "GlyphixTextFx" */ = {
@@ -846,14 +836,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.21.3;
-			};
-		};
-		5050EB072D46DC9300634B81 /* XCRemoteSwiftPackageReference "mlx-swift-examples" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ml-explore/mlx-swift-examples";
-			requirement = {
-				branch = main;
-				kind = branch;
 			};
 		};
 		505742432E1B8B2A00A26090 /* XCRemoteSwiftPackageReference "DpkgVersion" */ = {
@@ -1000,16 +982,6 @@
 			package = 5050EA6C2D46B44000634B81 /* XCRemoteSwiftPackageReference "mlx-swift" */;
 			productName = MLX;
 		};
-		5050EB082D46DCB400634B81 /* MLXLLM */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5050EB072D46DC9300634B81 /* XCRemoteSwiftPackageReference "mlx-swift-examples" */;
-			productName = MLXLLM;
-		};
-		5050EB0A2D46DCB900634B81 /* MLXLMCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5050EB072D46DC9300634B81 /* XCRemoteSwiftPackageReference "mlx-swift-examples" */;
-			productName = MLXLMCommon;
-		};
 		505535BB2D72F38900F54B28 /* AlignedCollectionViewFlowLayout */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AlignedCollectionViewFlowLayout;
@@ -1027,11 +999,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 505FC6172D4945B300F4CB17 /* XCRemoteSwiftPackageReference "SPIndicator" */;
 			productName = SPIndicator;
-		};
-		505FC65A2D4A754F00F4CB17 /* MLXVLM */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5050EB072D46DC9300634B81 /* XCRemoteSwiftPackageReference "mlx-swift-examples" */;
-			productName = MLXVLM;
 		};
 		506373A02EC0D6E200C8A9FB /* AlignedCollectionViewFlowLayout */ = {
 			isa = XCSwiftPackageProductDependency;
