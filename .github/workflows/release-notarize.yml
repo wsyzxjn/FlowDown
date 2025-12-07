@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - "*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (x.y.z)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -12,9 +18,9 @@ jobs:
   notarize:
     name: Notarize macOS build
     runs-on: macos-26
-    if: startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
     env:
-      VERSION: ${{ github.ref_name }}
+      VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
       RELEASE_BRANCH: release
     steps:
       - name: Validate tag format (x.x.x, no v/beta/rev)
@@ -27,10 +33,19 @@ jobs:
           fi
           echo "ok=false" >> "$GITHUB_OUTPUT"
           echo "Tag ${VERSION} does not match x.x.x (no v/beta/rev); skipping notarization." >> "$GITHUB_STEP_SUMMARY"
+      - name: Restrict manual dispatch to Lakr233
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_ACTOR}" != "Lakr233" ]]; then
+            echo "This workflow dispatch is restricted to Lakr233." >&2
+            exit 1
+          fi
       - name: Checkout
         if: steps.tag_check.outputs.ok == 'true'
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref }}
           fetch-depth: 0
           submodules: recursive
       - name: Ensure tag commit is on release branch
@@ -40,9 +55,10 @@ jobs:
           RELEASE_BRANCH: ${{ env.RELEASE_BRANCH }}
         run: |
           set -euo pipefail
+          HEAD_SHA="$(git rev-parse HEAD)"
           if git ls-remote --exit-code origin "${RELEASE_BRANCH}" >/dev/null 2>&1; then
             git fetch origin "${RELEASE_BRANCH}"
-            if git merge-base --is-ancestor "$GITHUB_SHA" "origin/${RELEASE_BRANCH}"; then
+            if git merge-base --is-ancestor "${HEAD_SHA}" "origin/${RELEASE_BRANCH}"; then
               echo "on_release=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
