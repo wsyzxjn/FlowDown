@@ -9,7 +9,25 @@ set -euo pipefail
 #   KEYCHAIN_DB (optional) -> passed via OTHER_CODE_SIGN_FLAGS
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-PROJECT_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
+
+# Prefer the git toplevel, but fall back to walking upward until we find the workspace.
+if PROJECT_ROOT_CANDIDATE=$(cd "$SCRIPT_DIR" && git rev-parse --show-toplevel 2>/dev/null); then
+  PROJECT_ROOT="$PROJECT_ROOT_CANDIDATE"
+else
+  PROJECT_ROOT="$SCRIPT_DIR"
+fi
+
+SEARCH_ROOT="$PROJECT_ROOT"
+while [[ "$SEARCH_ROOT" != "/" && ! -e "$SEARCH_ROOT/FlowDown.xcworkspace" ]]; do
+  SEARCH_ROOT=$(dirname "$SEARCH_ROOT")
+done
+
+if [[ ! -e "$SEARCH_ROOT/FlowDown.xcworkspace" ]]; then
+  echo "[-] FlowDown.xcworkspace not found from $SCRIPT_DIR" >&2
+  exit 1
+fi
+
+PROJECT_ROOT="$SEARCH_ROOT"
 
 cd "$PROJECT_ROOT"
 

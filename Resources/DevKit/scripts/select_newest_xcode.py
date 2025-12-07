@@ -24,10 +24,15 @@ def version_key(value: str) -> tuple:
 def discover_xcodes() -> list[Path]:
     if not APPLICATIONS_DIR.is_dir():
         return []
-    return sorted(
-        [path for path in APPLICATIONS_DIR.iterdir() if path.is_dir() and path.name.startswith("Xcode") and path.suffix == ".app"],
-        key=lambda p: p.name,
-    )
+    bundles = []
+    for path in APPLICATIONS_DIR.iterdir():
+        if not path.is_dir() or not path.name.startswith("Xcode") or path.suffix != ".app":
+            continue
+        if "beta" in path.name.lower():
+            log(f"skipping {path} (beta build)")
+            continue
+        bundles.append(path)
+    return sorted(bundles, key=lambda p: p.name)
 
 
 def read_metadata(bundle: Path):

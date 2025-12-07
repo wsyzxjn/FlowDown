@@ -73,13 +73,6 @@ jobs:
         run: |
           set -euo pipefail
           ./Resources/DevKit/scripts/select_newest_xcode.sh
-      - name: Anchor Release Version (tag -> CFBundleShortVersionString, build=0)
-        if: steps.tag_check.outputs.ok == 'true' && steps.release_branch.outputs.on_release == 'true'
-        env:
-          VERSION: ${{ env.VERSION }}
-        run: |
-          set -euo pipefail
-          ./Resources/DevKit/scripts/anchor-release-version.sh
       - name: Setup notary keychain and signing env
         if: steps.tag_check.outputs.ok == 'true' && steps.release_branch.outputs.on_release == 'true'
         id: setup_notary

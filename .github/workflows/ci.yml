@@ -3,8 +3,28 @@ name: Build
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'FlowDown/**'
+      - 'Frameworks/**'
+      - 'FlowDownUnitTests/**'
+      - 'Resources/**'
+      - 'FlowDown.xcodeproj/**'
+      - 'FlowDown.xcworkspace/**'
+      - '.github/workflows/ci.yml'
+      - 'Makefile'
+      - 'Package.resolved'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'FlowDown/**'
+      - 'Frameworks/**'
+      - 'FlowDownUnitTests/**'
+      - 'Resources/**'
+      - 'FlowDown.xcodeproj/**'
+      - 'FlowDown.xcworkspace/**'
+      - '.github/workflows/ci.yml'
+      - 'Makefile'
+      - 'Package.resolved'
 
 jobs:
   build:
